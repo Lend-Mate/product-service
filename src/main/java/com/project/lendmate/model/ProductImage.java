@@ -1,9 +1,6 @@
 package com.project.lendmate.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,18 +13,16 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Locations {
+public class ProductImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private int productId;
 
-    private String city;
+    private String imageUrl;
 
-    private String district;
+    private LocalDateTime createdAt;
 
-    private double latitude;
-
-    private double longitude;
+    private LocalDateTime updatedAt;
 }

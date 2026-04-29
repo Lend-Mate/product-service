@@ -1,6 +1,5 @@
 package com.project.lendmate.model;
 
-import com.project.lendmate.model.Enum.Reason;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,16 +13,18 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Getter
 @Setter
-public class ProductImages {
+public class ProductComment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private int productId;
 
-    private String imageUrl;
+    private String text;
+
+    private int rating;
 
     private LocalDateTime createdAt;
 
-    private LocalDateTime updateAt;
+    private LocalDateTime updatedAt;
 }

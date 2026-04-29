@@ -12,14 +12,15 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Products {
+@Builder
+public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private int ownerId;
+    private Long ownerId;
 
-    private int categoryId;
+    private Long categoryId;
 
     private String productName;
 
@@ -42,5 +43,5 @@ public class Products {
 
     private LocalDateTime createdAt;
 
-    private LocalDateTime updateAt;
+    private LocalDateTime updatedAt;
 }

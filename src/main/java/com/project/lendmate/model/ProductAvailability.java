@@ -29,6 +29,4 @@ public class ProductAvailability {
     private Reason reason;
 
     private LocalDateTime createdAt;
-
-    private LocalDateTime updateAt;
 }

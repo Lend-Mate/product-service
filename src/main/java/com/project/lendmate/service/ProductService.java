@@ -7,7 +7,7 @@ import java.util.List;
 public interface ProductService {
     ProductResponse getProductById(Long id);
     List<ProductResponse> getAllProducts();
-    void updateProduct(ProductRequest productRequest);
+    ProductResponse updateProduct(Long id, ProductRequest productRequest);
     ProductResponse createProduct(ProductRequest productRequest);
     void deleteProduct(Long productId);
 }

@@ -20,8 +20,8 @@ public class ProductRequest {
     private Currency currency;
     private BigDecimal price;
     private String brand;
-    private int stockQuantity;
-    private int minRentalDays;
-    private int maxRentalDays;
+    private Integer stockQuantity;
+    private Integer minRentalDays;
+    private Integer maxRentalDays;
     private BigDecimal depositAmount;
 }

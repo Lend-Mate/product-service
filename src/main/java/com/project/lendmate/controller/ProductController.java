@@ -9,9 +9,11 @@ import org.springframework.web.bind.annotation.*;
 import com.project.lendmate.dto.request.ProductRequest;
 import com.project.lendmate.dto.response.ProductResponse;
 
+import java.util.List;
+
 @AllArgsConstructor
 @RestController
-@RequestMapping(value = "/api/v1/product")
+@RequestMapping(value = "/api/v1/products")
 public class ProductController {
     private final ProductService productService;
 
@@ -25,4 +27,22 @@ public class ProductController {
     public ResponseEntity<ProductResponse> getProduct(@PathVariable Long id){
         return ResponseEntity.ok(productService.getProductById(id));
     }
+
+    @GetMapping
+    public ResponseEntity<List<ProductResponse>> getAllProducts(){
+        return ResponseEntity.ok(productService.getAllProducts());
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<ProductResponse> updateProduct(@PathVariable Long id, @RequestBody ProductRequest productRequest){
+        return ResponseEntity.ok(productService.updateProduct(id, productRequest));
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long id){
+        productService.deleteProduct(id);
+        return ResponseEntity.noContent().build();
+    }
+
+
 }

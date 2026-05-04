@@ -2,6 +2,7 @@ package com.project.lendmate.controller;
 
 
 import com.project.lendmate.service.ProductService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,28 +19,33 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping
-    public ResponseEntity<ProductResponse> createProduct(@RequestBody ProductRequest request){
+    public ResponseEntity<ProductResponse> createProduct(@Valid @RequestBody ProductRequest request){
+
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(productService.createProduct(request));
     }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<ProductResponse> getProduct(@PathVariable Long id){
+
         return ResponseEntity.ok(productService.getProductById(id));
     }
 
     @GetMapping
     public ResponseEntity<List<ProductResponse>> getAllProducts(){
+
         return ResponseEntity.ok(productService.getAllProducts());
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<ProductResponse> updateProduct(@PathVariable Long id, @RequestBody ProductRequest productRequest){
+    public ResponseEntity<ProductResponse> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductRequest productRequest){
+
         return ResponseEntity.ok(productService.updateProduct(id, productRequest));
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id){
+
         productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
     }

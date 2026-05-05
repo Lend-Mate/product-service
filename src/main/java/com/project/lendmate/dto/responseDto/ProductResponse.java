@@ -6,11 +6,10 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class ProductResponse {
 
     private Long id;
@@ -21,9 +20,9 @@ public class ProductResponse {
     private Currency currency;
     private BigDecimal price;
     private String brand;
-    private int stockQuantity;
-    private int minRentalDays;
-    private int maxRentalDays;
+    private Integer stockQuantity;
+    private Integer minRentalDays;
+    private Integer maxRentalDays;
     private BigDecimal depositAmount;
     private LocalDateTime createdAt;
     private LocalDateTime updateAt;

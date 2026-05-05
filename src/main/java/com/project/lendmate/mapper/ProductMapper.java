@@ -29,8 +29,9 @@ public class ProductMapper {
     }
 
     public com.project.lendmate.dto.response.ProductResponse toDto(Product product){
+        if (product == null) return null;
         return ProductResponse.builder()
-                .id(product.getId() != null ? product.getId() : null)
+                .id(product.getId())
                 .ownerId(product.getOwnerId())
                 .categoryId(product.getCategoryId())
                 .productName(product.getProductName())

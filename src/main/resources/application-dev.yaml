@@ -5,3 +5,10 @@ spring:
     password: devpass
   jpa:
     show-sql: true
+
+logging:
+  level:
+    com:
+      project:
+        lendmate: DEBUG
+

@@ -44,4 +44,8 @@ public class Product {
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
+
+    private boolean deleted = false;
+
+    private LocalDateTime deletedAt;
 }

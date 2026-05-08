@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -24,7 +25,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductResponse getProductById(Long productId) {
         log.debug("[getProductById] productId: {}", productId);
-        Product product = productRepository.findById(productId)
+        Product product = productRepository.findByIdAndDeletedFalse(productId)
                 .orElseThrow(() -> new ProductNotFoundException("Ürün bulunamadı: " + productId));
         ProductResponse response = mapper.toDto(product);
         log.debug("[getProductById] response: {}", response);
@@ -34,7 +35,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductResponse> getAllProducts() {
         log.debug("[getAllProducts]");
-       List<Product> products = productRepository.findAll();
+       List<Product> products = productRepository.findAllByDeletedFalse();
        List<ProductResponse> response = products.stream()
                        .map(mapper::toDto)
                                .toList();
@@ -45,7 +46,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductResponse updateProduct(Long id, ProductRequest productRequest) {
         log.debug("[updateProduct] productId: {} request: {}", id, productRequest);
-        Product product = productRepository.findById(id)
+        Product product = productRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new ProductNotFoundException("Ürün bulunamadı: " + id));
         mapper.updateEntity(product, productRequest);
         Product updatedProduct = productRepository.save(product);
@@ -71,9 +72,11 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void deleteProduct(Long productId) {
         log.debug("[deleteProduct] productId: {}", productId);
-        Product product = productRepository.findById(productId)
+        Product product = productRepository.findByIdAndDeletedFalse(productId)
                 .orElseThrow(() -> new ProductNotFoundException("Ürün bulunamadı: " + productId));
-        productRepository.delete(product);
+        product.setDeleted(true);
+        product.setDeletedAt(LocalDateTime.now());
+        productRepository.save(product);
         log.info("[deleteProduct] deleted productId: {}", productId);
     }
 }

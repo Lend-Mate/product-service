@@ -1,14 +1,13 @@
 package com.project.lendmate.controller;
 
-
 import com.project.lendmate.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.project.lendmate.dto.request.ProductRequest;
-import com.project.lendmate.dto.response.ProductResponse;
+import com.project.lendmate.dto.requestDto.ProductRequest;
+import com.project.lendmate.dto.responseDto.ProductResponse;
 
 import java.util.List;
 

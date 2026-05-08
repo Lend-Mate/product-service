@@ -1,4 +1,4 @@
-package com.project.lendmate.dto.response;
+package com.project.lendmate.dto.responseDto;
 
 import com.project.lendmate.model.Enum.Currency;
 import lombok.*;

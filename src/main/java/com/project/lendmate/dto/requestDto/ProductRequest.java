@@ -1,4 +1,4 @@
-package com.project.lendmate.dto.request;
+package com.project.lendmate.dto.requestDto;
 
 import com.project.lendmate.model.Enum.Currency;
 import jakarta.validation.constraints.*;

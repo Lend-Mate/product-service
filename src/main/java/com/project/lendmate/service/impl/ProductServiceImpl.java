@@ -1,7 +1,7 @@
 package com.project.lendmate.service.impl;
 
-import com.project.lendmate.dto.request.ProductRequest;
-import com.project.lendmate.dto.response.ProductResponse;
+import com.project.lendmate.dto.requestDto.ProductRequest;
+import com.project.lendmate.dto.responseDto.ProductResponse;
 import com.project.lendmate.expection.ProductAlreadyExistsException;
 import com.project.lendmate.expection.ProductNotFoundException;
 import com.project.lendmate.mapper.ProductMapper;

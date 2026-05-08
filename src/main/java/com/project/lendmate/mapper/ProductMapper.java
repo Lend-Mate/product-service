@@ -1,8 +1,8 @@
 package com.project.lendmate.mapper;
 
 import com.project.lendmate.model.Product;
-import com.project.lendmate.dto.request.ProductRequest;
-import com.project.lendmate.dto.response.ProductResponse;
+import com.project.lendmate.dto.requestDto.ProductRequest;
+import com.project.lendmate.dto.responseDto.ProductResponse;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -28,7 +28,7 @@ public class ProductMapper {
                 .build();
     }
 
-    public com.project.lendmate.dto.response.ProductResponse toDto(Product product){
+    public ProductResponse toDto(Product product){
         if (product == null) return null;
         return ProductResponse.builder()
                 .id(product.getId())

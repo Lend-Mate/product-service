@@ -67,7 +67,7 @@ jobs:
         run: |
           ssh -i ~/.ssh/deploy_key root@${{ vars.SERVER_HOST }} << 'EOF'
             cd /opt/lendmate
-            docker compose down app
-            docker compose build app
-            docker compose up -d
+            docker compose -f docker-compose-prod.yml down app
+            docker compose -f docker-compose-prod.yml build app
+            docker compose -f docker-compose-prod.yml up -d
           EOF

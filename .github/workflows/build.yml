@@ -1,6 +1,10 @@
-name: Build a JAR in spring boot using springboot
+name: Build and Deploy Spring Boot App
 on:
   push:
+    branches:
+      - main
+      - develop
+  pull_request:
     branches:
       - main
 
@@ -32,4 +36,35 @@ jobs:
 
 
       - name: Run Tests
-        run: mvn test -Dspring.profiles.active=test
+        run: mvn test
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Download JAR artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: java-app
+
+      - name: Deploy to server
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          source: "*.jar"
+          target: "/opt/lendmate/"
+          strip_components: 1
+
+      - name: Restart application
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            cd /opt/lendmate
+            pkill -f 'java -jar lendmate'
+            nohup java -jar lendmate-*.jar > app.log 2>&1 & -Dspring.profiles.active=test

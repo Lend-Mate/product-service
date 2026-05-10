@@ -49,23 +49,21 @@ jobs:
         with:
           name: java-app
 
-      - name: Deploy to server
-        uses: appleboy/scp-action@v0.1.4
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SERVER_SSH_KEY }}
-          source: "*.jar"
-          target: "/opt/lendmate/"
-          strip_components: 1
+      - name: Setup SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H ${{ vars.SERVER_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
 
-      - name: Restart application
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SERVER_SSH_KEY }}
-          script: |
-            cd /opt/lendmate
-            pkill -f 'java -jar lendmate'
-            nohup java -jar -Dspring.profiles.active=prod lendmate-*.jar > app.log 2>&1 &
+      - name: Deploy and restart
+        run: |
+          scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no *.jar root@${{ vars.SERVER_HOST }}:/opt/lendmate/
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no root@${{ vars.SERVER_HOST }} << 'EOF'
+          cd /opt/lendmate
+          pkill -f 'java -jar lendmate' || true
+          sleep 2
+          nohup java -jar lendmate-*.jar --spring.profiles.active=prod > app.log 2>&1 &
+          EOF

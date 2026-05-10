@@ -8,14 +8,12 @@ on:
     branches:
       - main
 
-
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
         uses: actions/checkout@v4
-
 
       - name: Set up JDK 21
         uses: actions/setup-java@v4
@@ -27,7 +25,7 @@ jobs:
         run: mvn test
 
       - name: Build with Maven
-        run: mvn clean package -DskipTests  # Testler zaten çalıştı
+        run: mvn clean package -DskipTests
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -41,10 +39,14 @@ jobs:
     if: github.ref == 'refs/heads/main'
     environment: SERVER_INFO
     steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
       - name: Download JAR artifact
         uses: actions/download-artifact@v4
         with:
           name: java-app
+          path: target/
 
       - name: Setup SSH
         env:
@@ -53,14 +55,24 @@ jobs:
           mkdir -p ~/.ssh
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -H ${{ vars.SERVER_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
+          ssh-keyscan -H ${{ vars.SERVER_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Deploy and restart
+      - name: Copy files to server
         run: |
-          scp -i ~/.ssh/deploy_key *.jar root@${{ vars.SERVER_HOST }}:/opt/lendmate/
+          scp -i ~/.ssh/deploy_key target/*.jar root@${{ vars.SERVER_HOST }}:/opt/lendmate/
+          scp -i ~/.ssh/deploy_key Dockerfile root@${{ vars.SERVER_HOST }}:/opt/lendmate/
+
+      - name: Build and restart container
+        run: |
           ssh -i ~/.ssh/deploy_key root@${{ vars.SERVER_HOST }} << 'EOF'
-          cd /opt/lendmate
-          pkill -f 'java -jar lendmate' || true
-          sleep 2
-          nohup java -jar lendmate-*.jar --spring.profiles.active=prod > app.log 2>&1 &
+            cd /opt/lendmate
+            docker stop lendmate || true
+            docker rm lendmate || true
+            docker build -t lendmate .
+            docker run -d \
+              --name lendmate \
+              --restart unless-stopped \
+              -p 8080:8080 \
+              -e SPRING_PROFILES_ACTIVE=prod \
+              lendmate
           EOF

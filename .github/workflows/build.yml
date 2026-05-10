@@ -23,20 +23,17 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
+      - name: Run Tests
+        run: mvn test
 
       - name: Build with Maven
-        run: mvn clean install
+        run: mvn clean package -DskipTests  # Testler zaten çalıştı
 
-
-      - name: Upload artifact for deployment job
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: java-app
           path: '${{ github.workspace }}/target/*.jar'
-
-
-      - name: Run Tests
-        run: mvn test
 
   deploy:
     runs-on: ubuntu-latest
@@ -60,8 +57,8 @@ jobs:
 
       - name: Deploy and restart
         run: |
-          scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no *.jar root@${{ vars.SERVER_HOST }}:/opt/lendmate/
-          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no root@${{ vars.SERVER_HOST }} << 'EOF'
+          scp -i ~/.ssh/deploy_key *.jar root@${{ vars.SERVER_HOST }}:/opt/lendmate/
+          ssh -i ~/.ssh/deploy_key root@${{ vars.SERVER_HOST }} << 'EOF'
           cd /opt/lendmate
           pkill -f 'java -jar lendmate' || true
           sleep 2

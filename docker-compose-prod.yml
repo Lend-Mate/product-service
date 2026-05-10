@@ -14,7 +14,7 @@ services:
 
   app:
     build: .
-    container_name: lendmate
+    container_name: product-service
     depends_on:
       - db
     environment:

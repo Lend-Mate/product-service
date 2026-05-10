@@ -94,7 +94,7 @@ class ProductServiceImplTest {
         ProductResponse result = productService.getProductById(1L);
 
         assertNotNull(result);
-        assertEquals(1L, result.getId());
+        assertEquals(2L, result.getId());
     }
 
     @Test

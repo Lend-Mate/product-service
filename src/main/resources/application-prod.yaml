@@ -1,7 +1,7 @@
 spring:
   datasource:
-    url: ${DB_URL}
-    username: ${DB_USERNAME}
+    url: jdbc:postgresql://db:5432/lendmate
+    username: lendmate
     password: ${DB_PASSWORD}
   jpa:
     show-sql: false

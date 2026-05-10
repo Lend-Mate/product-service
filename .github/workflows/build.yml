@@ -61,18 +61,13 @@ jobs:
         run: |
           scp -i ~/.ssh/deploy_key target/*.jar root@${{ vars.SERVER_HOST }}:/opt/lendmate/
           scp -i ~/.ssh/deploy_key Dockerfile root@${{ vars.SERVER_HOST }}:/opt/lendmate/
+          scp -i ~/.ssh/deploy_key docker-compose-prod.yml root@${{ vars.SERVER_HOST }}:/opt/lendmate/
 
-      - name: Build and restart container
+      - name: Deploy
         run: |
           ssh -i ~/.ssh/deploy_key root@${{ vars.SERVER_HOST }} << 'EOF'
             cd /opt/lendmate
-            docker stop lendmate || true
-            docker rm lendmate || true
-            docker build -t lendmate .
-            docker run -d \
-              --name lendmate \
-              --restart unless-stopped \
-              -p 8080:8080 \
-              -e SPRING_PROFILES_ACTIVE=prod \
-              lendmate
+            docker compose down app
+            docker compose build app
+            docker compose up -d
           EOF

@@ -7,8 +7,5 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class LendmateApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(LendmateApplication.class, args);
-
-
-
 	}
 }

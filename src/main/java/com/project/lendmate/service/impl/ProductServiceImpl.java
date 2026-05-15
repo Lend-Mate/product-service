@@ -24,59 +24,45 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductResponse getProductById(Long productId) {
-        log.debug("[getProductById] productId: {}", productId);
         Product product = productRepository.findByIdAndDeletedFalse(productId)
                 .orElseThrow(() -> new ProductNotFoundException("Ürün bulunamadı: " + productId));
-        ProductResponse response = mapper.toDto(product);
-        log.debug("[getProductById] response: {}", response);
-        return response;
+        return mapper.toDto(product);
     }
 
     @Override
     public List<ProductResponse> getAllProducts() {
-        log.debug("[getAllProducts]");
        List<Product> products = productRepository.findAllByDeletedFalse();
-       List<ProductResponse> response = products.stream()
-                       .map(mapper::toDto)
-                               .toList();
-        log.debug("[getAllProducts] product count: {}", response.size());
-        return response;
+        return products.stream()
+                        .map(mapper::toDto)
+                                .toList();
     }
 
     @Override
     public ProductResponse updateProduct(Long id, ProductRequest productRequest) {
-        log.debug("[updateProduct] productId: {} request: {}", id, productRequest);
         Product product = productRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new ProductNotFoundException("Ürün bulunamadı: " + id));
         mapper.updateEntity(product, productRequest);
         Product updatedProduct = productRepository.save(product);
-        ProductResponse response = mapper.toDto(updatedProduct);
-        log.debug("[updateProduct] response: {}", response);
-        return response;
+        return mapper.toDto(updatedProduct);
     }
 
     @Override
     public ProductResponse createProduct(ProductRequest productRequest) {
-        log.debug("[createProduct] request: {}", productRequest);
         boolean isExists = productRepository.existsByOwnerIdAndProductName(productRequest.getOwnerId(), productRequest.getProductName());
         if (isExists) {
             throw new ProductAlreadyExistsException("Bu ürün zaten mevcut.");
         }
         Product product = mapper.toEntity(productRequest);
         Product savedProduct = productRepository.save(product);
-        ProductResponse response = mapper.toDto(savedProduct);
-        log.debug("[createProduct] response: {}", response);
-        return response;
+        return mapper.toDto(savedProduct);
     }
 
     @Override
     public void deleteProduct(Long productId) {
-        log.debug("[deleteProduct] productId: {}", productId);
         Product product = productRepository.findByIdAndDeletedFalse(productId)
                 .orElseThrow(() -> new ProductNotFoundException("Ürün bulunamadı: " + productId));
         product.setDeleted(true);
         product.setDeletedAt(LocalDateTime.now());
         productRepository.save(product);
-        log.info("[deleteProduct] deleted productId: {}", productId);
     }
 }

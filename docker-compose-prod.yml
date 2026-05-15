@@ -1,22 +1,7 @@
 services:
-  db:
-    image: postgres:16
-    container_name: lendmate-postgres-db
-    environment:
-      POSTGRES_DB: lendmate
-      POSTGRES_USER: lendmate
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    restart: unless-stopped
-    ports:
-      - "5432:5432"
-
   app:
     build: .
     container_name: product-service
-    depends_on:
-      - db
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/lendmate
       SPRING_DATASOURCE_USERNAME: lendmate

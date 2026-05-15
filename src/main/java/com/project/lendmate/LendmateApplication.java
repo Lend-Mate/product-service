@@ -9,5 +9,6 @@ public class LendmateApplication {
 		SpringApplication.run(LendmateApplication.class, args);
 
 
+
 	}
 }

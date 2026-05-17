@@ -8,5 +8,4 @@ public class LendmateApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(LendmateApplication.class, args);
 	}
-
 }

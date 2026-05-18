@@ -1,7 +1,7 @@
 package com.project.lendmate.controller;
 
 
-import com.project.lendmate.service.S3Service;
+import com.project.lendmate.service.impl.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

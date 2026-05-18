@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -48,4 +49,7 @@ public class Product {
     private boolean deleted = false;
 
     private LocalDateTime deletedAt;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<ProductImage> images;
 }

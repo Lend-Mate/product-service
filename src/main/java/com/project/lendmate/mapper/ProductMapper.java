@@ -1,14 +1,21 @@
 package com.project.lendmate.mapper;
 
+import com.project.lendmate.dto.responseDto.ProductImageResponse;
 import com.project.lendmate.model.Product;
 import com.project.lendmate.dto.requestDto.ProductRequest;
 import com.project.lendmate.dto.responseDto.ProductResponse;
+import com.project.lendmate.model.ProductImage;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Component
+@AllArgsConstructor
 public class ProductMapper {
+    private final ProductImageMapper productImageMapper;
+
     public Product toEntity(ProductRequest productRequest){
         if(productRequest == null) return null;
         return Product.builder()
@@ -30,6 +37,7 @@ public class ProductMapper {
 
     public ProductResponse toDto(Product product){
         if (product == null) return null;
+
         return ProductResponse.builder()
                 .id(product.getId())
                 .ownerId(product.getOwnerId())
@@ -43,6 +51,7 @@ public class ProductMapper {
                 .minRentalDays(product.getMinRentalDays())
                 .maxRentalDays(product.getMaxRentalDays())
                 .depositAmount(product.getDepositAmount())
+                .images(mapImages(product.getImages()))
                 .createdAt(product.getCreatedAt())
                 .updateAt(product.getUpdatedAt())
                 .build();
@@ -61,5 +70,10 @@ public class ProductMapper {
         if (request.getMaxRentalDays() != null) product.setMaxRentalDays(request.getMaxRentalDays());
         if (request.getDepositAmount() != null) product.setDepositAmount(request.getDepositAmount());
         product.setUpdatedAt(LocalDateTime.now());
+    }
+
+    private List<ProductImageResponse> mapImages(List<ProductImage> images) {
+        if (images == null) return List.of();
+        return images.stream().map(productImageMapper::toDto).toList();
     }
 }

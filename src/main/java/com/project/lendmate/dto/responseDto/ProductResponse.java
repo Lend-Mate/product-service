@@ -1,10 +1,12 @@
 package com.project.lendmate.dto.responseDto;
 
 import com.project.lendmate.model.Enum.Currency;
+import com.project.lendmate.model.ProductImage;
 import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Builder
@@ -24,6 +26,7 @@ public class ProductResponse {
     private Integer minRentalDays;
     private Integer maxRentalDays;
     private BigDecimal depositAmount;
+    private List<ProductImageResponse> images;
     private LocalDateTime createdAt;
     private LocalDateTime updateAt;
 }

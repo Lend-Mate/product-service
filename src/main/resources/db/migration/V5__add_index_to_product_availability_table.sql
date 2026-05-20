@@ -1,0 +1,1 @@
+CREATE INDEX idx_pa_product_id ON product_availability(product_id);

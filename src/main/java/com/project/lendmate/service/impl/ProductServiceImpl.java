@@ -31,7 +31,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductResponse> getAllProducts() {
-       List<Product> products = productRepository.findAllByDeletedFalse();
+       List<Product> products = productRepository.findAll();
         return products.stream()
                         .map(mapper::toDto)
                                 .toList();

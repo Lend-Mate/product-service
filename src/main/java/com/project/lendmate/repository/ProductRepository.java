@@ -2,6 +2,7 @@ package com.project.lendmate.repository;
 
 import com.project.lendmate.model.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -11,9 +12,17 @@ import java.util.Optional;
 public interface ProductRepository extends JpaRepository<Product, Long> {
     boolean existsByOwnerIdAndProductName(Long ownerId, String productName);
 
-    //TODO: availability tablosunda enddate'i geçmemiş olanları almamamız lazım
-    //TODO: iki tabloda ilgili yerler index eklemek  gerekiyor ki sorgu hızlı çalışsın
-    List<Product> findAllByDeletedFalse();
+    @Query(value = """
+        SELECT p.*
+        FROM product p
+        LEFT JOIN product_availability pa ON p.id = pa.product_id
+        WHERE p.deleted = false
+        AND (
+            pa.product_id IS NULL
+            OR now() NOT BETWEEN pa.start_date AND pa.end_date
+        )
+    """, nativeQuery = true)
+    List<Product> findAll();
 
     Optional<Product> findByIdAndDeletedFalse(Long productId);
 }

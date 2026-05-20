@@ -110,7 +110,7 @@ class ProductServiceImplTest {
     @Test
     void getAllProducts_success() {
         List<Product> products = List.of(product);
-        when(productRepository.findAllByDeletedFalse()).thenReturn(products);
+        when(productRepository.findAll()).thenReturn(products);
         when(mapper.toDto(product)).thenReturn(productResponse);
 
         List<ProductResponse> result = productService.getAllProducts();
@@ -121,7 +121,7 @@ class ProductServiceImplTest {
 
     @Test
     void getAllProducts_emptyList() {
-        when(productRepository.findAllByDeletedFalse()).thenReturn(Collections.emptyList());
+        when(productRepository.findAll()).thenReturn(Collections.emptyList());
 
         List<ProductResponse> result = productService.getAllProducts();
 

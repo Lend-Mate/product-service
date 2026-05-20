@@ -24,6 +24,6 @@ jobs:
       - name: Remove old artifacts
         uses: c-hive/gha-remove-artifacts@v1
         with:
-          age: ${{ github.event.inputs.artifact_age || '1 month' }}
+          age: ${{ github.event.inputs.artifact_age || '2 days' }}
           skip-tags: ${{ github.event.inputs.skip_tags || 'false' }}
           skip-recent: ${{ github.event.inputs.skip_recent != '0' && github.event.inputs.skip_recent || '' }}

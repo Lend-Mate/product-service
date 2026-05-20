@@ -28,6 +28,9 @@ public class ProductImageServiceImpl implements ProductImageService {
     private final StorageService storageService;
     private final ProductImageMapper mapper;
 
+    //TODO: product id de alacak parametre olarak
+    //TODO: resim s3 e yüklenmeden önce unique bir isim belirlenecek
+    //TODO: resim s3 e yüklendikten sonra db ye resim bilgileri ve product id bilgisiyle kaydedilecek
     @Override
     public ProductImageResponse createProductImage(MultipartFile file) {
         String fileName = storageService.uploadFile(file);
@@ -36,4 +39,9 @@ public class ProductImageServiceImpl implements ProductImageService {
 
         return mapper.toDto(image);
     }
+
+
+    //TODO: bir productın resimlerini silmek için controller servis repository tarafı yazılacak
+    //TODO: silme işlemi çoklu yapılabiliyor olmalı
+    //TODO: başka bir business var gerekli mi düşünülecek
 }

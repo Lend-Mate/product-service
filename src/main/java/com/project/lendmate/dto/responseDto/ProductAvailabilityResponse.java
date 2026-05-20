@@ -1,20 +1,16 @@
-package com.project.lendmate.model;
+package com.project.lendmate.dto.responseDto;
 
 import com.project.lendmate.model.Enum.Reason;
-import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Entity
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
-@Builder
-public class ProductAvailability {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class ProductAvailabilityResponse {
+
     private Long id;
 
     private Long productId;
@@ -23,7 +19,6 @@ public class ProductAvailability {
 
     private LocalDateTime endDate;
 
-    @Enumerated(EnumType.STRING)
     private Reason reason;
 
     private LocalDateTime createdAt;

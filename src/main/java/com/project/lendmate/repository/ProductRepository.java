@@ -11,6 +11,9 @@ import java.util.Optional;
 public interface ProductRepository extends JpaRepository<Product, Long> {
     boolean existsByOwnerIdAndProductName(Long ownerId, String productName);
 
+    //TODO: availability tablosunda enddate'i geçmemiş olanları almamamız lazım
+    //TODO: iki tabloda ilgili yerler index eklemek  gerekiyor ki sorgu hızlı çalışsın
     List<Product> findAllByDeletedFalse();
+
     Optional<Product> findByIdAndDeletedFalse(Long productId);
 }

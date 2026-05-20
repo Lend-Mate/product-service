@@ -50,6 +50,6 @@ public class Product {
 
     private LocalDateTime deletedAt;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "productId", cascade = CascadeType.ALL)
     private List<ProductImage> images;
 }

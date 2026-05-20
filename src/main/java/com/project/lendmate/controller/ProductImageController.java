@@ -3,6 +3,7 @@ package com.project.lendmate.controller;
 import com.project.lendmate.dto.requestDto.ProductRequest;
 import com.project.lendmate.dto.responseDto.ProductImageResponse;
 import com.project.lendmate.dto.responseDto.ProductResponse;
+import com.project.lendmate.repository.ProductImageRepository;
 import com.project.lendmate.service.ProductImageService;
 import com.project.lendmate.service.ProductService;
 import jakarta.validation.Valid;
@@ -20,9 +21,15 @@ import java.util.List;
 public class ProductImageController {
     private final ProductImageService productImageService;
 
-    @PostMapping
-    public ResponseEntity<ProductImageResponse> createProductImage(@RequestBody MultipartFile file){
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(productImageService.createProductImage(file));
+    @PostMapping("/{productId}/images")
+    public ResponseEntity<List<ProductImageResponse>>createProductImage(@PathVariable Long productId,
+                                                                        @RequestParam("files") List<MultipartFile> files){
+        return ResponseEntity.ok(productImageService.createProductImage(productId, files));
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteProductImages(@RequestBody List<Long> imageIds){
+        productImageService.deleteProductImages(imageIds);
+        return ResponseEntity.noContent().build();
     }
 }

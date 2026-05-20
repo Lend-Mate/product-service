@@ -9,6 +9,7 @@ import com.project.lendmate.mapper.ProductImageMapper;
 import com.project.lendmate.mapper.ProductMapper;
 import com.project.lendmate.model.Product;
 import com.project.lendmate.model.ProductImage;
+import com.project.lendmate.repository.ProductImageRepository;
 import com.project.lendmate.repository.ProductRepository;
 import com.project.lendmate.service.ProductImageService;
 import com.project.lendmate.service.ProductService;
@@ -20,6 +21,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -27,21 +30,36 @@ import java.util.List;
 public class ProductImageServiceImpl implements ProductImageService {
     private final StorageService storageService;
     private final ProductImageMapper mapper;
+    private final ProductImageRepository imageRepository;
 
-    //TODO: product id de alacak parametre olarak
-    //TODO: resim s3 e yüklenmeden önce unique bir isim belirlenecek
-    //TODO: resim s3 e yüklendikten sonra db ye resim bilgileri ve product id bilgisiyle kaydedilecek
+    //TODO: buraya isPrimary kontrolü eklenecek!!!!
     @Override
-    public ProductImageResponse createProductImage(MultipartFile file) {
-        String fileName = storageService.uploadFile(file);
-        ProductImage image = new ProductImage();
-        image.setImageUrl(fileName);
+    public List<ProductImageResponse> createProductImage(Long productId, List<MultipartFile> files) {
+        return files.stream()
+                .map(file -> {
+                    String fileName = storageService.uploadFile(file);
+                    ProductImage image = ProductImage.builder()
+                            .productId(productId)
+                            .imageUrl(fileName)
+                            .isPrimary(false)
+                            .createdAt(LocalDateTime.now())
+                            .updatedAt(LocalDateTime.now())
+                            .build();
+                    return mapper.toDto(imageRepository.save(image));
+                })
+                .collect(Collectors.toList());
+    }
 
-        return mapper.toDto(image);
+    @Override
+    public void deleteProductImages(List<Long> imageIds) {
+        List<ProductImage> images = imageRepository.findAllById(imageIds);
+        //images.forEach(image -> storageService.deleteFile(image.getImageUrl()));
+        if (!images.isEmpty()){
+            imageRepository.deleteAll(images);
+        }
     }
 
 
-    //TODO: bir productın resimlerini silmek için controller servis repository tarafı yazılacak
-    //TODO: silme işlemi çoklu yapılabiliyor olmalı
-    //TODO: başka bir business var gerekli mi düşünülecek
+
+
 }

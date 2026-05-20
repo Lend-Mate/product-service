@@ -13,6 +13,7 @@ import software.amazon.awssdk.services.s3.model.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,15 +27,16 @@ public class S3Service implements StorageService {
     public String uploadFile(MultipartFile file) {
         try {
             String fileName = file.getOriginalFilename();
-            log.info("Uploading file: {}", fileName);
+            String uniqueFileName = generateUniqueFileName(fileName);
+            log.info("Uploading file: {}", uniqueFileName);
             s3Client.putObject(PutObjectRequest.builder()
                             .bucket(bucketName)
-                            .key(fileName)
+                            .key(uniqueFileName)
                             .contentType(file.getContentType())
                             .build(),
                     RequestBody.fromBytes(file.getBytes()));
-            log.info("File uploaded successfully: {}", fileName);
-            return fileName;
+            log.info("File uploaded successfully: {}", uniqueFileName);
+            return uniqueFileName;
         } catch (IOException e) {
             log.error("Failed to upload file", e);
             throw new RuntimeException("Failed to upload file", e);
@@ -73,5 +75,12 @@ public class S3Service implements StorageService {
                 .key(fileName)
                 .build());
         log.info("File deleted successfully: {}", fileName);
+    }
+
+    private String generateUniqueFileName(String originalName){
+        String extension = (originalName != null && originalName.contains("."))
+                ? originalName.substring(originalName.lastIndexOf("."))
+                : "";
+        return UUID.randomUUID() + extension;
     }
 }

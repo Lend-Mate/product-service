@@ -14,7 +14,7 @@ public class ProductImageMapper {
         if (productImage == null) return null;
         return ProductImageResponse.builder()
                 .id(productImage.getId())
-                .productId(productImage.getProduct() == null ? null : productImage.getProduct().getId())
+                .productId(productImage.getProductId())
                 .isPrimary(productImage.isPrimary())
                 .imageUrl(productImage.getImageUrl())
                 .build();

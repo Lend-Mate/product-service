@@ -8,5 +8,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface ProductImageService {
-    ProductImageResponse createProductImage(MultipartFile file);
+    List<ProductImageResponse> createProductImage(Long productId, List<MultipartFile> files);
+    void deleteProductImages(List<Long> imageIds);
 }

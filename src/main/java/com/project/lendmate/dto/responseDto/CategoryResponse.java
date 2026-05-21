@@ -1,32 +1,21 @@
-package com.project.lendmate.model;
+package com.project.lendmate.dto.responseDto;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Entity
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
-@Builder
-public class Category {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class CategoryResponse {
     private Long id;
-
     private String categoryName;
-
     private String description;
-
-    private boolean isActive;
-
+    private Boolean isActive;
     private LocalDateTime createdAt;
-
     private LocalDateTime updatedAt;
 }

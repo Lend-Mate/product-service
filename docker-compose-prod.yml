@@ -7,7 +7,7 @@ services:
     build: .
     container_name: product-service
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/lendmate
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/product_service_db
       SPRING_DATASOURCE_USERNAME: lendmate
       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
       SPRING_PROFILES_ACTIVE: prod

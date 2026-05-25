@@ -17,6 +17,11 @@ import java.util.List;
 public class ProductController {
     private final ProductService productService;
 
+    @GetMapping("/health")
+    public String healthCheck(){
+        return "product service is up and working...";
+    }
+
     @PostMapping
     public ResponseEntity<ProductResponse> createProduct(@Valid @RequestBody ProductRequest request){
 

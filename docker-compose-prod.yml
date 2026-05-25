@@ -3,7 +3,7 @@ networks:
     external: true
 
 services:
-  app:
+  product-service:
     build: .
     container_name: product-service
     environment:

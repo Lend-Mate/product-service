@@ -4,6 +4,7 @@ networks:
 
 services:
   product-service:
+    image: "product-service"
     build: .
     container_name: product-service
     environment:

@@ -16,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping(value = "/api/v1/product-availability")
+@RequestMapping(value = "/product-availability")
 public class ProductAvailabilityController {
     private final ProductAvailabilityService productAvailabilityService;
 

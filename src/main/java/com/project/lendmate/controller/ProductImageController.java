@@ -17,7 +17,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping(value = "/api/v1/product-image")
+@RequestMapping(value = "/product-image")
 public class ProductImageController {
     private final ProductImageService productImageService;
 

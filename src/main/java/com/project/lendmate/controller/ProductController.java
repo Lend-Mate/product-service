@@ -13,7 +13,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping(value = "/api/v1/products")
+@RequestMapping(value = "/products")
 public class ProductController {
     private final ProductService productService;
 

@@ -1,19 +1,15 @@
-package com.project.lendmate.model;
+package com.project.lendmate.dto.responseDto;
 
-import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Entity
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
-@Builder
-public class ProductComment {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class ProductCommentResponse {
+
     private Long id;
 
     private int productId;

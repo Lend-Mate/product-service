@@ -20,5 +20,8 @@ public class CategoryRequest {
     @Size(max = 500, message = "Açıklama 500 karakterden uzun olamaz")
     private String description;
 
+    @Size(max = 500, message = "Resim ismi 500 karakterden uzun olamaz")
+    private String imageName;
+
     private Boolean isActive;
 }

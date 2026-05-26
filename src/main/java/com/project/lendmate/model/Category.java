@@ -24,6 +24,8 @@ public class Category {
 
     private String description;
 
+    private String imageName;
+
     private boolean isActive;
 
     private LocalDateTime createdAt;

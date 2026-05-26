@@ -17,7 +17,7 @@ public class S3Controller {
 
     private final S3Service s3Service;
 
-    @PostMapping("/upload")
+    @PostMapping(value = "/upload", consumes = "multipart/form-data")
     public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
         System.out.println(file.getName());
         String fileUrl = s3Service.uploadFile(file);

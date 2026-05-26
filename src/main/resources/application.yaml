@@ -6,6 +6,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+
 aws:
   accessKeyId: AKIAT25QXJXDR3JVEHWM
   secretAccessKey: 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

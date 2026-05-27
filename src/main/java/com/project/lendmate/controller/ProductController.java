@@ -1,6 +1,7 @@
 package com.project.lendmate.controller;
 
 import com.project.lendmate.service.ProductService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 @RequestMapping(value = "/products")
+@SecurityRequirement(name = "Bearer Authentication")
 public class ProductController {
     private final ProductService productService;
 

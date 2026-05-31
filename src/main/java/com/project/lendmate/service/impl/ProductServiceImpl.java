@@ -11,6 +11,7 @@ import com.project.lendmate.service.ProductService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -64,5 +65,11 @@ public class ProductServiceImpl implements ProductService {
         product.setDeleted(true);
         product.setDeletedAt(LocalDateTime.now());
         productRepository.save(product);
+    }
+
+    @Override
+    @Transactional
+    public void deleteProductsByOwner(Long ownerId) {
+        productRepository.deleteAllByOwnerId(ownerId);
     }
 }

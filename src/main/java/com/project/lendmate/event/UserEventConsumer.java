@@ -1,5 +1,6 @@
 package com.project.lendmate.event;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.lendmate.repository.ProductRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,11 +12,18 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class UserEventConsumer {
 
+    private final ObjectMapper objectMapper;
     private final ProductRepository productRepository;
 
     @KafkaListener(topics = "user.deleted", groupId = "product-service")
-    public void handleUserDeleted(UserDeletedEvent event) {
-        log.info("User deleted event received for userId: {}", event.getUserId());
+    public void handleUserDeleted(String message) throws Exception {
+
+        UserDeletedEvent event =
+                objectMapper.readValue(message, UserDeletedEvent.class);
+
+        log.info("User deleted event received for userId: {}",
+                event.getUserId());
+
         productRepository.deleteAllByOwnerId(event.getUserId());
     }
 }

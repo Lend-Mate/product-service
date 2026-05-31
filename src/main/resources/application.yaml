@@ -20,10 +20,8 @@ spring:
       group-id: product-service
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
 
-      properties:
-        spring.json.trusted.packages: "*"
 
 aws:
   accessKeyId: AKIAT25QXJXDR3JVEHWM

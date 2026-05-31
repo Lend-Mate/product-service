@@ -14,6 +14,15 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+  kafka:
+    bootstrap-servers: lendmate-kafka:9092
+    consumer:
+      group-id: product-service
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+    properties:
+      spring.json.trusted.packages: "com.project.lendmate.event"
 
 aws:
   accessKeyId: AKIAT25QXJXDR3JVEHWM

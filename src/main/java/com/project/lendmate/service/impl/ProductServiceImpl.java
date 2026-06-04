@@ -10,11 +10,15 @@ import com.project.lendmate.repository.ProductRepository;
 import com.project.lendmate.service.ProductService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -24,6 +28,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductMapper mapper;
 
     @Override
+    //@Cacheable(value = "products", key = "#productId")
     public ProductResponse getProductById(Long productId) {
         Product product = productRepository.findByIdAndDeletedFalse(productId)
                 .orElseThrow(() -> new ProductNotFoundException("Ürün bulunamadı: " + productId));
@@ -31,14 +36,19 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Cacheable(value = "productLists", key = "'all'")
     public List<ProductResponse> getAllProducts() {
        List<Product> products = productRepository.findAll();
         return products.stream()
                         .map(mapper::toDto)
-                                .toList();
+                        .collect(Collectors.toList());
     }
 
     @Override
+    @Caching(evict = {
+            //@CacheEvict(value = "products", key = "#id"),
+            @CacheEvict(value = "productLists", key = "'all'")
+    })
     public ProductResponse updateProduct(Long id, ProductRequest productRequest) {
         Product product = productRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new ProductNotFoundException("Ürün bulunamadı: " + id));
@@ -48,6 +58,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @CacheEvict(value = "productLists", key = "'all'")
     public ProductResponse createProduct(ProductRequest productRequest) {
         boolean isExists = productRepository.existsByOwnerIdAndProductName(productRequest.getOwnerId(), productRequest.getProductName());
         if (isExists) {
@@ -59,6 +70,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @CacheEvict(value = "productLists", key = "'all'")
     public void deleteProduct(Long productId) {
         Product product = productRepository.findByIdAndDeletedFalse(productId)
                 .orElseThrow(() -> new ProductNotFoundException("Ürün bulunamadı: " + productId));

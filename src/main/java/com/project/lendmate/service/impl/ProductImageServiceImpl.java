@@ -34,13 +34,12 @@ public class ProductImageServiceImpl implements ProductImageService {
 
     //TODO: buraya isPrimary kontrolü eklenecek!!!!
     @Override
-    public List<ProductImageResponse> createProductImage(Long productId, List<MultipartFile> files) {
-        return files.stream()
-                .map(file -> {
-                    String fileName = storageService.uploadFile(file);
+    public List<ProductImageResponse> createProductImage(Long productId, List<String> imageNames) {
+        return imageNames.stream()
+                .map(imageName -> {
                     ProductImage image = ProductImage.builder()
                             .productId(productId)
-                            .imageUrl(fileName)
+                            .imageUrl(imageName)
                             .isPrimary(false)
                             .createdAt(LocalDateTime.now())
                             .updatedAt(LocalDateTime.now())

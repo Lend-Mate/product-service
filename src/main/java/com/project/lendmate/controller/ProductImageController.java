@@ -23,8 +23,8 @@ public class ProductImageController {
 
     @PostMapping("/{productId}/images")
     public ResponseEntity<List<ProductImageResponse>>createProductImage(@PathVariable Long productId,
-                                                                        @RequestParam("files") List<MultipartFile> files){
-        return ResponseEntity.ok(productImageService.createProductImage(productId, files));
+                                                                        @RequestBody List<String> imageNames){
+        return ResponseEntity.ok(productImageService.createProductImage(productId, imageNames));
     }
 
     @DeleteMapping

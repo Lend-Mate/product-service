@@ -84,4 +84,11 @@ public class ProductServiceImpl implements ProductService {
     public void deleteProductsByOwner(Long ownerId) {
         productRepository.deleteAllByOwnerId(ownerId);
     }
+
+    @Override
+    public List<ProductResponse> getProductsByIds(List<Long> ids) {
+        return productRepository.findAllById(ids).stream()
+                .map(mapper::toDto)
+                .toList();
+    }
 }

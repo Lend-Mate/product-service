@@ -11,4 +11,5 @@ public interface ProductService {
     ProductResponse createProduct(ProductRequest productRequest);
     void deleteProduct(Long productId);
     void deleteProductsByOwner(Long ownerId);
+    List<ProductResponse> getProductsByIds(List<Long> ids);
 }

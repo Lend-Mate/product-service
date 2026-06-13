@@ -56,5 +56,10 @@ public class ProductController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/batch")
+    public ResponseEntity<List<ProductResponse>> getProductsByIds(@RequestParam List<Long> ids) {
+        return ResponseEntity.ok(productService.getProductsByIds(ids));
+    }
+
 
 }

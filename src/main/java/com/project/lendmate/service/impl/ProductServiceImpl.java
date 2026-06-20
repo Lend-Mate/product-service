@@ -1,5 +1,6 @@
 package com.project.lendmate.service.impl;
 
+import com.project.lendmate.document.ProductDocument;
 import com.project.lendmate.dto.requestDto.ProductRequest;
 import com.project.lendmate.dto.responseDto.ProductResponse;
 import com.project.lendmate.expection.ProductAlreadyExistsException;
@@ -7,6 +8,7 @@ import com.project.lendmate.expection.ProductNotFoundException;
 import com.project.lendmate.mapper.ProductMapper;
 import com.project.lendmate.model.Product;
 import com.project.lendmate.repository.ProductRepository;
+import com.project.lendmate.repository.ProductSearchRepository;
 import com.project.lendmate.service.ProductService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +27,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
+    private final ProductSearchRepository productSearchRepository;
     private final ProductMapper mapper;
 
     @Override
@@ -90,5 +93,21 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findAllById(ids).stream()
                 .map(mapper::toDto)
                 .toList();
+    }
+
+    @Override
+    public List<Long> searchProductsByIds(String query) {
+        List<ProductDocument> results = productSearchRepository
+                .findByProductNameContainingOrDescriptionContaining(query, query);
+
+        return results.stream()
+                .map(doc -> Long.valueOf(doc.getId()))
+                .toList();
+    }
+
+    @Override
+    public List<ProductResponse> searchProductsPostgres(String query) {
+        List<Product> products = productRepository.searchByNameOrDescription(query);
+        return products.stream().map(mapper::toDto).toList();
     }
 }

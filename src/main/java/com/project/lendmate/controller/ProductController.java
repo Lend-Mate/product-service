@@ -61,5 +61,15 @@ public class ProductController {
         return ResponseEntity.ok(productService.getProductsByIds(ids));
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<ProductResponse>> searchProducts(@RequestParam String text) {
+        List<Long> productIds = productService.searchProductsByIds(text);
+        List<ProductResponse> products = productService.getProductsByIds(productIds);
+        return ResponseEntity.ok(products);
+    }
 
+    @GetMapping("/search/postgres")
+    public ResponseEntity<List<ProductResponse>> searchProductsPostgres(@RequestParam String text) {
+        return ResponseEntity.ok(productService.searchProductsPostgres(text));
+    }
 }

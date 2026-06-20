@@ -7,6 +7,12 @@ spring:
     show-sql: true
   main:
     allow-bean-definition-overriding: true
+
+  elasticsearch:
+    uris: http://localhost:9200
+    repositories:
+      enabled: true
+
   data:
     redis:
       host: localhost

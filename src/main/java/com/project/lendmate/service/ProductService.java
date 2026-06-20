@@ -12,4 +12,6 @@ public interface ProductService {
     void deleteProduct(Long productId);
     void deleteProductsByOwner(Long ownerId);
     List<ProductResponse> getProductsByIds(List<Long> ids);
+    List<Long> searchProductsByIds(String query);
+    List<ProductResponse> searchProductsPostgres(String query);
 }

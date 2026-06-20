@@ -5,6 +5,12 @@ spring:
     password: lendmate
   jpa:
     show-sql: true
+  main:
+    allow-bean-definition-overriding: true
+  data:
+    redis:
+      host: localhost
+      port: 6379
 
 logging:
   level:

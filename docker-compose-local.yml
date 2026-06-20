@@ -1,15 +1,17 @@
+networks:
+  lendmate-net:
+    external: true
+
 services:
-  postgres:
-    image: postgres:16
-    container_name: postgres
-    environment:
-      POSTGRES_USER: lendmate
-      POSTGRES_PASSWORD: lendmate
-      POSTGRES_DB: product_service_db_dev
+  product-service:
+    image: "product-service"
+    build: .
+    container_name: product-service
     ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - "8080:8080"
+    restart: unless-stopped
+    networks:
+      - lendmate-net
 
 volumes:
   postgres_data:

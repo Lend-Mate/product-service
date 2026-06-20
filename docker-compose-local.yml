@@ -9,6 +9,11 @@ services:
     container_name: product-service
     ports:
       - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/product_service_db_dev
+      SPRING_DATASOURCE_USERNAME: lendmate
+      SPRING_DATASOURCE_PASSWORD: lendmate
+      SPRING_PROFILES_ACTIVE: dev
     restart: unless-stopped
     networks:
       - lendmate-net

@@ -12,7 +12,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/files")
 @RequiredArgsConstructor
-@CrossOrigin
 public class S3Controller {
 
     private final S3Service s3Service;

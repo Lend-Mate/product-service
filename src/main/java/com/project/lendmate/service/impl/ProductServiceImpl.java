@@ -15,6 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -97,8 +99,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Long> searchProductsByIds(String query) {
+        Pageable pageable = PageRequest.of(0, 100); // first 100 results
         List<ProductDocument> results = productSearchRepository
-                .findByProductNameContainingOrDescriptionContaining(query, query);
+                .findByProductNameContainingOrDescriptionContaining(query, query, pageable);
 
         return results.stream()
                 .map(doc -> Long.valueOf(doc.getId()))

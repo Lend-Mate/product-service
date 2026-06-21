@@ -38,6 +38,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
         LOWER(product_name) LIKE LOWER(CONCAT('%', :query, '%'))
         OR LOWER(description) LIKE LOWER(CONCAT('%', :query, '%'))
     )
+    ORDER BY id
+    LIMIT 100
     """, nativeQuery = true)
     List<Product> searchByNameOrDescription(@Param("query") String query);
 }

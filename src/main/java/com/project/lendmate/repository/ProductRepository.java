@@ -22,6 +22,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             pa.product_id IS NULL
             OR now() NOT BETWEEN pa.start_date AND pa.end_date
         )
+        ORDER BY id
+        LIMIT 100
     """, nativeQuery = true)
     List<Product> findAll();
 

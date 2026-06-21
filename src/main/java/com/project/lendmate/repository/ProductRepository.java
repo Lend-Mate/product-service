@@ -35,8 +35,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     SELECT * FROM product
     WHERE deleted = false
     AND (
-        LOWER(product_name) LIKE LOWER(CONCAT('%', :query, '%'))
-        OR LOWER(description) LIKE LOWER(CONCAT('%', :query, '%'))
+        product_name ILIKE '%' || :query || '%'
+        OR description ILIKE '%' || :query || '%'
     )
     ORDER BY id
     LIMIT 100

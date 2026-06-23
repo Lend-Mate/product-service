@@ -13,8 +13,7 @@ public interface ProductService {
     ProductResponse createProduct(ProductRequest productRequest);
     void deleteProduct(Long productId);
     void deleteProductsByOwner(Long ownerId);
-    Page<ProductResponse> getProductsByIds(List<Long> ids, int page, int size, String sortBy, boolean ascending);
     List<ProductResponse> getProductsByIds(List<Long> ids);
-    List<Long> searchProductsByIds(String query);
+    Page<Long> searchProductsByIds(String query, int page, int size, String sortBy, boolean ascending);
     Page<ProductResponse> searchProductsPostgres(String query, int page, int size, String sortBy, boolean ascending);
 }

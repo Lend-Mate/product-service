@@ -5,6 +5,8 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -74,9 +76,16 @@ public class ProductController {
             @RequestParam(defaultValue = "5") int size,
             @RequestParam(defaultValue = "id") String sortBy,
             @RequestParam(defaultValue = "true") boolean ascending) {
-        List<Long> productIds = productService.searchProductsByIds(text);
-        Page<ProductResponse> products = productService.getProductsByIds(productIds, page, size, sortBy, ascending);
-        return ResponseEntity.ok(products);
+        Page<Long> productIds = productService.searchProductsByIds(text, page, size, sortBy, ascending);
+        List<ProductResponse> products = productService.getProductsByIds(productIds.getContent());
+
+        Page<ProductResponse> result = new PageImpl<>(
+                products,
+                PageRequest.of(page, size),
+                productIds.getTotalElements()
+        );
+
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping("/search/postgres")

@@ -86,14 +86,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<ProductResponse> getProductsByIds(List<Long> ids, int page, int size, String sortBy, boolean ascending) {
-        Sort sort = ascending ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
-        Pageable pageable = PageRequest.of(page, size, sort);
-
-        return productRepository.findAllById(ids, pageable).map(mapper::toDto);
-    }
-
-    @Override
     public List<ProductResponse> getProductsByIds(List<Long> ids) {
         return productRepository.findAllById(ids).stream()
                 .map(mapper::toDto)
@@ -101,13 +93,14 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Long> searchProductsByIds(String query) {
-        List<ProductDocument> results = productSearchRepository
-                .findByProductNameContainingOrDescriptionContaining(query, query);
+    public Page<Long> searchProductsByIds(String query, int page, int size, String sortBy, boolean ascending) {
+        Sort sort = ascending ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
 
-        return results.stream()
-                .map(doc -> Long.valueOf(doc.getId()))
-                .toList();
+        Page<ProductDocument> results = productSearchRepository
+                .findByProductNameContainingOrDescriptionContaining(query, query, pageable);
+
+        return results.map(doc -> Long.valueOf(doc.getId()));
     }
 
     @Override

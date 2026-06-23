@@ -59,16 +59,4 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     )
     """, nativeQuery = true)
     Page<Product> searchByNameOrDescription(@Param("query") String query, Pageable pageable);
-
-    @Query(value = """
-    SELECT *
-    FROM product
-    WHERE id IN :ids
-    ORDER BY id
-    """, countQuery = """
-    SELECT COUNT(*)
-    FROM product
-    WHERE id IN :ids
-    """, nativeQuery = true)
-    Page<Product> findAllById(List<Long> ids, Pageable pageable);
 }

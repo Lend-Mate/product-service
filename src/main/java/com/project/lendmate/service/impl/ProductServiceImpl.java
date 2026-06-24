@@ -34,6 +34,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     //@Cacheable(value = "products", key = "#productId")
+    @Transactional(readOnly = true)
     public ProductResponse getProductById(Long productId) {
         Product product = productRepository.findByIdAndDeletedFalse(productId)
                 .orElseThrow(() -> new ProductNotFoundException("Ürün bulunamadı: " + productId));

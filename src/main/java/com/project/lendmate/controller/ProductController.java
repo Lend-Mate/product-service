@@ -4,6 +4,9 @@ import com.project.lendmate.service.ProductService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,9 +41,13 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> getAllProducts(){
-
-        return ResponseEntity.ok(productService.getAllProducts());
+    public ResponseEntity<Page<ProductResponse>> getAllProducts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "true") boolean ascending
+    ){
+        return ResponseEntity.ok(productService.getAllProducts(page, size, sortBy, ascending));
     }
 
     @PutMapping(value = "/{id}")
@@ -57,19 +64,37 @@ public class ProductController {
     }
 
     @GetMapping("/batch")
-    public ResponseEntity<List<ProductResponse>> getProductsByIds(@RequestParam List<Long> ids) {
+    public ResponseEntity<List<ProductResponse>> getProductsByIds(
+            @RequestParam List<Long> ids) {
         return ResponseEntity.ok(productService.getProductsByIds(ids));
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<ProductResponse>> searchProducts(@RequestParam String text) {
-        List<Long> productIds = productService.searchProductsByIds(text);
-        List<ProductResponse> products = productService.getProductsByIds(productIds);
-        return ResponseEntity.ok(products);
+    public ResponseEntity<Page<ProductResponse>> searchProducts(
+            @RequestParam String text,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "true") boolean ascending) {
+        Page<Long> productIds = productService.searchProductsByIds(text, page, size, sortBy, ascending);
+        List<ProductResponse> products = productService.getProductsByIds(productIds.getContent());
+
+        Page<ProductResponse> result = new PageImpl<>(
+                products,
+                PageRequest.of(page, size),
+                productIds.getTotalElements()
+        );
+
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping("/search/postgres")
-    public ResponseEntity<List<ProductResponse>> searchProductsPostgres(@RequestParam String text) {
-        return ResponseEntity.ok(productService.searchProductsPostgres(text));
+    public ResponseEntity<Page<ProductResponse>> searchProductsPostgres(
+            @RequestParam String text,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "true") boolean ascending) {
+        return ResponseEntity.ok(productService.searchProductsPostgres(text, page, size, sortBy, ascending));
     }
 }

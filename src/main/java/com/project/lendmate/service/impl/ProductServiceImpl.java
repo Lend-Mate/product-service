@@ -13,16 +13,16 @@ import com.project.lendmate.service.ProductService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -33,7 +33,6 @@ public class ProductServiceImpl implements ProductService {
     private final ProductMapper mapper;
 
     @Override
-    //@Cacheable(value = "products", key = "#productId")
     @Transactional(readOnly = true)
     public ProductResponse getProductById(Long productId) {
         Product product = productRepository.findByIdAndDeletedFalse(productId)
@@ -42,19 +41,15 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    @Cacheable(value = "productLists", key = "'all'")
-    public List<ProductResponse> getAllProducts() {
-       List<Product> products = productRepository.findAll();
-        return products.stream()
-                        .map(mapper::toDto)
-                        .collect(Collectors.toList());
+    public Page<ProductResponse> getAllProducts(int page, int size, String sortBy, boolean ascending) {
+       Sort sort = ascending ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+       Pageable pageable = PageRequest.of(page, size, sort);
+
+       Page<Product> products = productRepository.findAvailableProducts(pageable);
+       return products.map(mapper::toDto);
     }
 
     @Override
-    @Caching(evict = {
-            //@CacheEvict(value = "products", key = "#id"),
-            @CacheEvict(value = "productLists", key = "'all'")
-    })
     public ProductResponse updateProduct(Long id, ProductRequest productRequest) {
         Product product = productRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new ProductNotFoundException("Ürün bulunamadı: " + id));
@@ -64,7 +59,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    @CacheEvict(value = "productLists", key = "'all'")
     public ProductResponse createProduct(ProductRequest productRequest) {
         boolean isExists = productRepository.existsByOwnerIdAndProductName(productRequest.getOwnerId(), productRequest.getProductName());
         if (isExists) {
@@ -76,7 +70,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    @CacheEvict(value = "productLists", key = "'all'")
     public void deleteProduct(Long productId) {
         Product product = productRepository.findByIdAndDeletedFalse(productId)
                 .orElseThrow(() -> new ProductNotFoundException("Ürün bulunamadı: " + productId));
@@ -99,19 +92,22 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Long> searchProductsByIds(String query) {
-        Pageable pageable = PageRequest.of(0, 100); // first 100 results
-        List<ProductDocument> results = productSearchRepository
+    public Page<Long> searchProductsByIds(String query, int page, int size, String sortBy, boolean ascending) {
+        Sort sort = ascending ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<ProductDocument> results = productSearchRepository
                 .findByProductNameContainingOrDescriptionContaining(query, query, pageable);
 
-        return results.stream()
-                .map(doc -> Long.valueOf(doc.getId()))
-                .toList();
+        return results.map(doc -> Long.valueOf(doc.getId()));
     }
 
     @Override
-    public List<ProductResponse> searchProductsPostgres(String query) {
-        List<Product> products = productRepository.searchByNameOrDescription(query);
-        return products.stream().map(mapper::toDto).toList();
+    public Page<ProductResponse> searchProductsPostgres(String query, int page, int size, String sortBy, boolean ascending) {
+        Sort sort = ascending ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<Product> products = productRepository.searchByNameOrDescription(query, pageable);
+        return products.map(mapper::toDto);
     }
 }

@@ -1,6 +1,8 @@
 package com.project.lendmate.repository;
 
 import com.project.lendmate.model.Product;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,7 +16,17 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     boolean existsByOwnerIdAndProductName(Long ownerId, String productName);
 
     @Query(value = """
-        SELECT p.*
+    SELECT p.*
+    FROM product p
+    LEFT JOIN product_availability pa ON p.id = pa.product_id
+    WHERE p.deleted = false
+    AND (
+        pa.product_id IS NULL
+        OR now() NOT BETWEEN pa.start_date AND pa.end_date
+    )
+    ORDER BY id
+    """, countQuery = """
+        SELECT COUNT(DISTINCT p.id)
         FROM product p
         LEFT JOIN product_availability pa ON p.id = pa.product_id
         WHERE p.deleted = false
@@ -22,10 +34,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             pa.product_id IS NULL
             OR now() NOT BETWEEN pa.start_date AND pa.end_date
         )
-        ORDER BY id
-        LIMIT 100
     """, nativeQuery = true)
-    List<Product> findAll();
+    Page<Product> findAvailableProducts(Pageable pageable);
 
     Optional<Product> findByIdAndDeletedFalse(Long productId);
 
@@ -39,7 +49,14 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
         OR description ILIKE '%' || :query || '%'
     )
     ORDER BY id
-    LIMIT 100
+    """, countQuery = """
+    SELECT COUNT(*)
+    FROM product
+    WHERE deleted = false
+    AND (
+        product_name ILIKE '%' || :query || '%'
+        OR description ILIKE '%' || :query || '%'
+    )
     """, nativeQuery = true)
-    List<Product> searchByNameOrDescription(@Param("query") String query);
+    Page<Product> searchByNameOrDescription(@Param("query") String query, Pageable pageable);
 }

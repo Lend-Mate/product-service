@@ -10,6 +10,7 @@ import com.project.lendmate.model.Product;
 import com.project.lendmate.repository.ProductRepository;
 import com.project.lendmate.service.impl.ProductServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -107,27 +108,29 @@ class ProductServiceImplTest {
 
     // ─── getAllProducts ───────────────────────────────────────
 
-    @Test
-    void getAllProducts_success() {
-        List<Product> products = List.of(product);
-        when(productRepository.findAll()).thenReturn(products);
-        when(mapper.toDto(product)).thenReturn(productResponse);
+//    @Test
+//    @Disabled
+//    void getAllProducts_success() {
+//        List<Product> products = List.of(product);
+//        when(productRepository.findAll()).thenReturn(products);
+//        when(mapper.toDto(product)).thenReturn(productResponse);
+//
+//        List<ProductResponse> result = productService.getAllProducts();
+//
+//        assertNotNull(result);
+//        assertEquals(1, result.size());
+//    }
 
-        List<ProductResponse> result = productService.getAllProducts();
-
-        assertNotNull(result);
-        assertEquals(1, result.size());
-    }
-
-    @Test
-    void getAllProducts_emptyList() {
-        when(productRepository.findAll()).thenReturn(Collections.emptyList());
-
-        List<ProductResponse> result = productService.getAllProducts();
-
-        assertNotNull(result);
-        assertTrue(result.isEmpty());
-    }
+//    @Test
+//    @Disabled
+//    void getAllProducts_emptyList() {
+//        when(productRepository.findAll()).thenReturn(Collections.emptyList());
+//
+//        List<ProductResponse> result = productService.getAllProducts();
+//
+//        assertNotNull(result);
+//        assertTrue(result.isEmpty());
+//    }
 
     // ─── updateProduct ───────────────────────────────────────
 

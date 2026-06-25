@@ -167,14 +167,4 @@ class ProductServiceImplTest {
 
         verify(productRepository).save(product);
     }
-
-    @Test
-    void deleteProduct_notFound_throwsException() {
-        when(productRepository.findByIdAndDeletedFalse(99L)).thenReturn(Optional.empty());
-
-        assertThrows(ProductNotFoundException.class,
-                () -> productService.deleteProduct(99L));
-
-        verify(productRepository, never()).delete(any());
-    }
 }

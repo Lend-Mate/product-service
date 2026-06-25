@@ -1,7 +1,9 @@
 package com.project.lendmate.service.impl;
 
 import com.project.lendmate.document.ProductDocument;
+import com.project.lendmate.dto.requestDto.ProductFilterRequest;
 import com.project.lendmate.dto.requestDto.ProductRequest;
+import com.project.lendmate.dto.requestDto.ProductSearchFilterRequest;
 import com.project.lendmate.dto.responseDto.ProductResponse;
 import com.project.lendmate.expection.ProductAlreadyExistsException;
 import com.project.lendmate.expection.ProductNotFoundException;
@@ -9,6 +11,8 @@ import com.project.lendmate.mapper.ProductMapper;
 import com.project.lendmate.model.Product;
 import com.project.lendmate.repository.ProductRepository;
 import com.project.lendmate.repository.ProductSearchRepository;
+import com.project.lendmate.repository.specification.ProductElasticsearchQueryBuilder;
+import com.project.lendmate.repository.specification.ProductSpecification;
 import com.project.lendmate.service.ProductService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +22,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +35,7 @@ import java.util.List;
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final ProductSearchRepository productSearchRepository;
+    private final ProductElasticsearchQueryBuilder productElasticsearchQueryBuilder;
     private final ProductMapper mapper;
 
     @Override
@@ -41,11 +47,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<ProductResponse> getAllProducts(int page, int size, String sortBy, boolean ascending) {
+    public Page<ProductResponse> getAllProducts(int page, int size, String sortBy, boolean ascending, ProductFilterRequest filter) {
        Sort sort = ascending ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
        Pageable pageable = PageRequest.of(page, size, sort);
 
-       Page<Product> products = productRepository.findAvailableProducts(pageable);
+       Specification<Product> spec = ProductSpecification.withFilters(filter);
+       Page<Product> products = productRepository.findAll(spec, pageable);
        return products.map(mapper::toDto);
     }
 
@@ -92,22 +99,20 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<Long> searchProductsByIds(String query, int page, int size, String sortBy, boolean ascending) {
+    public Page<Long> searchProductsByIds(ProductSearchFilterRequest filter, String query, int page, int size, String sortBy, boolean ascending) {
         Sort sort = ascending ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
         Pageable pageable = PageRequest.of(page, size, sort);
 
-        Page<ProductDocument> results = productSearchRepository
-                .findByProductNameContainingOrDescriptionContaining(query, query, pageable);
+//        Page<ProductDocument> results = productSearchRepository
+//                .findByProductNameContainingOrDescriptionContaining(query, query, pageable);
+
+        Page<ProductDocument> results = productElasticsearchQueryBuilder.searchWithFilters(filter, pageable);
 
         return results.map(doc -> Long.valueOf(doc.getId()));
     }
 
     @Override
-    public Page<ProductResponse> searchProductsPostgres(String query, int page, int size, String sortBy, boolean ascending) {
-        Sort sort = ascending ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
-        Pageable pageable = PageRequest.of(page, size, sort);
-
-        Page<Product> products = productRepository.searchByNameOrDescription(query, pageable);
-        return products.map(mapper::toDto);
+    public List<String> getUniqueBrands() {
+        return productRepository.findDistinctBrands();
     }
 }

@@ -1,5 +1,7 @@
 package com.project.lendmate.controller;
 
+import com.project.lendmate.dto.requestDto.ProductFilterRequest;
+import com.project.lendmate.dto.requestDto.ProductSearchFilterRequest;
 import com.project.lendmate.service.ProductService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import com.project.lendmate.dto.requestDto.ProductRequest;
 import com.project.lendmate.dto.responseDto.ProductResponse;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @AllArgsConstructor
@@ -45,9 +48,25 @@ public class ProductController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
             @RequestParam(defaultValue = "id") String sortBy,
-            @RequestParam(defaultValue = "true") boolean ascending
+            @RequestParam(defaultValue = "true") boolean ascending,
+
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) String brand,
+            @RequestParam(required = false) BigDecimal minPrice,
+            @RequestParam(required = false) BigDecimal maxPrice,
+            @RequestParam(required = false) Integer minRentalDays,
+            @RequestParam(required = false) Integer maxRentalDays
     ){
-        return ResponseEntity.ok(productService.getAllProducts(page, size, sortBy, ascending));
+        ProductFilterRequest filter = ProductFilterRequest.builder()
+                .categoryId(categoryId)
+                .brand(brand)
+                .minPrice(minPrice)
+                .maxPrice(maxPrice)
+                .minRentalDays(minRentalDays)
+                .maxRentalDays(maxRentalDays)
+                .build();
+
+        return ResponseEntity.ok(productService.getAllProducts(page, size, sortBy, ascending, filter));
     }
 
     @PutMapping(value = "/{id}")
@@ -75,8 +94,27 @@ public class ProductController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
             @RequestParam(defaultValue = "id") String sortBy,
-            @RequestParam(defaultValue = "true") boolean ascending) {
-        Page<Long> productIds = productService.searchProductsByIds(text, page, size, sortBy, ascending);
+            @RequestParam(defaultValue = "true") boolean ascending,
+
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) String brand,
+            @RequestParam(required = false) BigDecimal minPrice,
+            @RequestParam(required = false) BigDecimal maxPrice,
+            @RequestParam(required = false) Integer minRentalDays,
+            @RequestParam(required = false) Integer maxRentalDays) {
+
+        ProductSearchFilterRequest filter = ProductSearchFilterRequest.builder()
+                .query(text)
+                .categoryId(categoryId)
+                .brand(brand)
+                .minPrice(minPrice)
+                .maxPrice(maxPrice)
+                .minRentalDays(minRentalDays)
+                .maxRentalDays(maxRentalDays)
+                .build();
+
+        Page<Long> productIds = productService.searchProductsByIds(filter, text, page, size, sortBy, ascending);
+
         List<ProductResponse> products = productService.getProductsByIds(productIds.getContent());
 
         Page<ProductResponse> result = new PageImpl<>(
@@ -88,13 +126,8 @@ public class ProductController {
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/search/postgres")
-    public ResponseEntity<Page<ProductResponse>> searchProductsPostgres(
-            @RequestParam String text,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size,
-            @RequestParam(defaultValue = "id") String sortBy,
-            @RequestParam(defaultValue = "true") boolean ascending) {
-        return ResponseEntity.ok(productService.searchProductsPostgres(text, page, size, sortBy, ascending));
+    @GetMapping("/brands")
+    public ResponseEntity<List<String>> getUniqueBrands() {
+        return ResponseEntity.ok(productService.getUniqueBrands());
     }
 }

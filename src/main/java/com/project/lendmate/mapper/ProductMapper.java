@@ -1,9 +1,11 @@
 package com.project.lendmate.mapper;
 
+import com.project.lendmate.dto.responseDto.ProductCommentResponse;
 import com.project.lendmate.dto.responseDto.ProductImageResponse;
 import com.project.lendmate.model.Product;
 import com.project.lendmate.dto.requestDto.ProductRequest;
 import com.project.lendmate.dto.responseDto.ProductResponse;
+import com.project.lendmate.model.ProductComment;
 import com.project.lendmate.model.ProductImage;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -15,6 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ProductMapper {
     private final ProductImageMapper productImageMapper;
+    private final ProductCommentMapper productCommentMapper;
 
     public Product toEntity(ProductRequest productRequest){
         if(productRequest == null) return null;
@@ -52,6 +55,7 @@ public class ProductMapper {
                 .maxRentalDays(product.getMaxRentalDays())
                 .depositAmount(product.getDepositAmount())
                 .images(mapImages(product.getImages()))
+                .comments(mapComments(product.getComments()))
                 .createdAt(product.getCreatedAt())
                 .updateAt(product.getUpdatedAt())
                 .build();
@@ -75,5 +79,10 @@ public class ProductMapper {
     private List<ProductImageResponse> mapImages(List<ProductImage> images) {
         if (images == null) return List.of();
         return images.stream().map(productImageMapper::toDto).toList();
+    }
+
+    private List<ProductCommentResponse> mapComments(List<ProductComment> comments) {
+        if (comments == null) return List.of();
+        return comments.stream().map(productCommentMapper::toDto).toList();
     }
 }

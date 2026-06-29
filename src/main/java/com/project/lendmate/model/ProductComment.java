@@ -16,11 +16,14 @@ public class ProductComment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private int productId;
+    @Column(name = "product_id")
+    private Long productId;
+
+    private Long userId;
 
     private String text;
 
-    private int rating;
+    private Integer rating;
 
     private LocalDateTime createdAt;
 

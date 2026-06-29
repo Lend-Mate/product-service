@@ -12,7 +12,9 @@ public class ProductCommentResponse {
 
     private Long id;
 
-    private int productId;
+    private Long productId;
+
+    private Long userId;
 
     private String text;
 

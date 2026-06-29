@@ -15,6 +15,7 @@ public class ProductCommentMapper {
 
         return ProductComment.builder()
                 .productId(request.getProductId())
+                .userId(request.getUserId())
                 .text(request.getText())
                 .rating(request.getRating())
                 .createdAt(LocalDateTime.now())
@@ -28,10 +29,18 @@ public class ProductCommentMapper {
         return ProductCommentResponse.builder()
                 .id(model.getId())
                 .productId(model.getProductId())
+                .userId(model.getUserId())
                 .text(model.getText())
                 .rating(model.getRating())
                 .createdAt(model.getCreatedAt())
                 .updatedAt(model.getUpdatedAt())
                 .build();
+    }
+
+    public void updateEntity(ProductComment product, ProductCommentRequest request) {
+        if (product == null || request == null) return;
+        product.setText(request.getText());
+        product.setRating(request.getRating());
+        product.setUpdatedAt(LocalDateTime.now());
     }
 }

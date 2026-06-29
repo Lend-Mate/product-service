@@ -1,5 +1,6 @@
 package com.project.lendmate.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.project.lendmate.model.Enum.Currency;
 import jakarta.persistence.*;
 import lombok.*;
@@ -52,4 +53,7 @@ public class Product {
 
     @OneToMany(mappedBy = "productId", cascade = CascadeType.ALL)
     private List<ProductImage> images;
+
+    @OneToMany(mappedBy = "productId", cascade = CascadeType.ALL)
+    private List<ProductComment> comments;
 }

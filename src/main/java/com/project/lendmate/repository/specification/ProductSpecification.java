@@ -41,6 +41,10 @@ public class ProductSpecification {
         spec = spec.and(isNotDeleted());
         spec = spec.and(isAvailable());
 
+        if (filter.getQuery() != null) {
+            spec = spec.and(matchProductNameOrDescription(filter.getQuery()));
+        }
+
         if (filter.getCategoryId() != null) {
             spec = spec.and(hasCategoryId(filter.getCategoryId()));
         }
@@ -61,6 +65,27 @@ public class ProductSpecification {
         }
 
         return spec;
+    }
+
+    private static Specification<Product> matchProductNameOrDescription(String query) {
+        return (root, criteriaQuery, cb) -> {
+            // Eğer arama metni boşsa, filtreleme yapma (koşulsuz geç)
+            if (query == null || query.trim().isEmpty()) {
+                return null;
+            }
+
+            // Küçük/büyük harf duyarlılığını ortadan kaldırmak için metni küçültüyoruz
+            String lowerCaseQuery = "%" + query.toLowerCase() + "%";
+
+            // 1. Koşul: Name alanı sorguyu içeriyor mu?
+            var namePredicate = cb.like(cb.lower(root.get("productName")), lowerCaseQuery);
+
+            // 2. Koşul: Description alanı sorguyu içeriyor mu?
+            var descriptionPredicate = cb.like(cb.lower(root.get("description")), lowerCaseQuery);
+
+            // İki koşulu OR (veya) ile birleştiriyoruz
+            return cb.or(namePredicate, descriptionPredicate);
+        };
     }
 
     private static Specification<Product> hasCategoryId(Long id) {

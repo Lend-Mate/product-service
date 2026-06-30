@@ -128,6 +128,7 @@ public class ProductController {
 
     @GetMapping("/brands")
     public ResponseEntity<List<String>> getUniqueBrands(
+            @RequestParam(required = false) String text,
             @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice,
@@ -135,6 +136,7 @@ public class ProductController {
             @RequestParam(required = false) Integer maxRentalDays
     ) {
         ProductFilterRequest filter = ProductFilterRequest.builder()
+                .query(text)
                 .categoryId(categoryId)
                 .minPrice(minPrice)
                 .maxPrice(maxPrice)

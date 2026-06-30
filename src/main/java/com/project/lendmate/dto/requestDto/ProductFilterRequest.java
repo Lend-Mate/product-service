@@ -9,6 +9,7 @@ import java.util.List;
 @Data
 @Builder
 public class ProductFilterRequest {
+    private String query;
     private Long categoryId;
     private List<String> brands;
     private BigDecimal minPrice;

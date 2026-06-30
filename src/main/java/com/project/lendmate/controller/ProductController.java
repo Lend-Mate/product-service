@@ -51,7 +51,7 @@ public class ProductController {
             @RequestParam(defaultValue = "true") boolean ascending,
 
             @RequestParam(required = false) Long categoryId,
-            @RequestParam(required = false) String brand,
+            @RequestParam(required = false) List<String> brands,
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice,
             @RequestParam(required = false) Integer minRentalDays,
@@ -59,7 +59,7 @@ public class ProductController {
     ){
         ProductFilterRequest filter = ProductFilterRequest.builder()
                 .categoryId(categoryId)
-                .brand(brand)
+                .brands(brands)
                 .minPrice(minPrice)
                 .maxPrice(maxPrice)
                 .minRentalDays(minRentalDays)
@@ -97,7 +97,7 @@ public class ProductController {
             @RequestParam(defaultValue = "true") boolean ascending,
 
             @RequestParam(required = false) Long categoryId,
-            @RequestParam(required = false) String brand,
+            @RequestParam(required = false) List<String> brands,
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice,
             @RequestParam(required = false) Integer minRentalDays,
@@ -106,7 +106,7 @@ public class ProductController {
         ProductSearchFilterRequest filter = ProductSearchFilterRequest.builder()
                 .query(text)
                 .categoryId(categoryId)
-                .brand(brand)
+                .brands(brands)
                 .minPrice(minPrice)
                 .maxPrice(maxPrice)
                 .minRentalDays(minRentalDays)
@@ -127,7 +127,21 @@ public class ProductController {
     }
 
     @GetMapping("/brands")
-    public ResponseEntity<List<String>> getUniqueBrands() {
-        return ResponseEntity.ok(productService.getUniqueBrands());
+    public ResponseEntity<List<String>> getUniqueBrands(
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) BigDecimal minPrice,
+            @RequestParam(required = false) BigDecimal maxPrice,
+            @RequestParam(required = false) Integer minRentalDays,
+            @RequestParam(required = false) Integer maxRentalDays
+    ) {
+        ProductFilterRequest filter = ProductFilterRequest.builder()
+                .categoryId(categoryId)
+                .minPrice(minPrice)
+                .maxPrice(maxPrice)
+                .minRentalDays(minRentalDays)
+                .maxRentalDays(maxRentalDays)
+                .build();
+
+        return ResponseEntity.ok(productService.getUniqueBrands(filter));
     }
 }

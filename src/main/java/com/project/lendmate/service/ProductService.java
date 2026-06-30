@@ -17,5 +17,5 @@ public interface ProductService {
     void deleteProductsByOwner(Long ownerId);
     List<ProductResponse> getProductsByIds(List<Long> ids);
     Page<Long> searchProductsByIds(ProductSearchFilterRequest filter, String query, int page, int size, String sortBy, boolean ascending);
-    List<String> getUniqueBrands();
+    List<String> getUniqueBrands(ProductFilterRequest filter);
 }

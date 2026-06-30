@@ -1,5 +1,6 @@
 package com.project.lendmate.repository.specification;
 
+import co.elastic.clients.elasticsearch._types.FieldValue;
 import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
 import com.project.lendmate.document.ProductDocument;
 import com.project.lendmate.dto.requestDto.ProductSearchFilterRequest;
@@ -45,12 +46,15 @@ public class ProductElasticsearchQueryBuilder {
             );
         }
 
-        // brand filtresi
-        if (filter.getBrand() != null) {
+        if (filter.getBrands() != null && !filter.getBrands().isEmpty()) {
+            List<FieldValue> brandValues = filter.getBrands().stream()
+                    .map(FieldValue::of)
+                    .toList();
+
             boolQuery.filter(f -> f
-                    .term(t -> t
+                    .terms(t -> t
                             .field("brand")
-                            .value(filter.getBrand())
+                            .terms(v -> v.value(brandValues)) // terms altındaki v (TermsQueryField) value kabul eder
                     )
             );
         }

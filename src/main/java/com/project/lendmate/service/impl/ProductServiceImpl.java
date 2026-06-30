@@ -103,16 +103,13 @@ public class ProductServiceImpl implements ProductService {
         Sort sort = ascending ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
         Pageable pageable = PageRequest.of(page, size, sort);
 
-//        Page<ProductDocument> results = productSearchRepository
-//                .findByProductNameContainingOrDescriptionContaining(query, query, pageable);
-
         Page<ProductDocument> results = productElasticsearchQueryBuilder.searchWithFilters(filter, pageable);
-
         return results.map(doc -> Long.valueOf(doc.getId()));
     }
 
     @Override
-    public List<String> getUniqueBrands() {
-        return productRepository.findDistinctBrands();
+    public List<String> getUniqueBrands(ProductFilterRequest filter) {
+        Specification<Product> spec = ProductSpecification.withFilters(filter);
+        return productRepository.findDistinctBrands(spec);
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class ProductSpecification {
 
@@ -43,8 +44,8 @@ public class ProductSpecification {
         if (filter.getCategoryId() != null) {
             spec = spec.and(hasCategoryId(filter.getCategoryId()));
         }
-        if (filter.getBrand() != null) {
-            spec = spec.and(hasBrand(filter.getBrand()));
+        if (filter.getBrands() != null && !filter.getBrands().isEmpty()) {
+            spec = spec.and(hasBrands(filter.getBrands()));
         }
         if (filter.getMinPrice() != null) {
             spec = spec.and(hasPriceGreaterThan(filter.getMinPrice()));
@@ -67,9 +68,8 @@ public class ProductSpecification {
                 id == null ? null : cb.equal(root.get("categoryId"), id);
     }
 
-    private static Specification<Product> hasBrand(String brand) {
-        return (root, query, cb) ->
-                brand == null ? null : cb.like(cb.lower(root.get("brand")), "%" + brand.toLowerCase() + "%");
+    private static Specification<Product> hasBrands(List<String> brands) {
+        return (root, query, cb) -> root.get("brand").in(brands);
     }
 
     private static Specification<Product> hasPriceGreaterThan(BigDecimal minPrice) {

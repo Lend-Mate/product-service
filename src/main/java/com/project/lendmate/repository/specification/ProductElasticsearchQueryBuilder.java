@@ -53,7 +53,7 @@ public class ProductElasticsearchQueryBuilder {
 
             boolQuery.filter(f -> f
                     .terms(t -> t
-                            .field("brand")
+                            .field("brand.keyword")
                             .terms(v -> v.value(brandValues)) // terms altındaki v (TermsQueryField) value kabul eder
                     )
             );

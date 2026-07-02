@@ -24,8 +24,8 @@ public class ProductCommentServiceImpl implements ProductCommentService {
     private final ProductCommentMapper mapper;
 
     @Override
-    public List<ProductCommentResponse> getComments() {
-        return repository.findAll().stream().map(mapper::toDto).collect(Collectors.toList());
+    public List<ProductCommentResponse> getComments(Long id) {
+        return repository.findByProductId(id).stream().map(mapper::toDto).collect(Collectors.toList());
     }
 
     @Override

@@ -6,7 +6,7 @@ import com.project.lendmate.dto.responseDto.ProductCommentResponse;
 import java.util.List;
 
 public interface ProductCommentService {
-    List<ProductCommentResponse> getComments();
+    List<ProductCommentResponse> getComments(Long id);
     ProductCommentResponse createProductComment(ProductCommentRequest request);
     ProductCommentResponse updateProductComment(Long commentId, ProductCommentRequest request);
     void deleteProductComments(List<Long> commentIds);

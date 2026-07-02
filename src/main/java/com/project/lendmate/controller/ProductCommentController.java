@@ -26,10 +26,10 @@ public class ProductCommentController {
                 .body(productCommentService.createProductComment(request));
     }
 
-    @GetMapping
-    public ResponseEntity<List<ProductCommentResponse>> getComments(){
+    @GetMapping("/product/{id}")
+    public ResponseEntity<List<ProductCommentResponse>> getComments(@PathVariable Long id){
         return ResponseEntity.ok()
-                .body(productCommentService.getComments());
+                .body(productCommentService.getComments(id));
     }
 
     @PutMapping("/{id}")

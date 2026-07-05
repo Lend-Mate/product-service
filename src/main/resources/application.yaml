@@ -15,15 +15,6 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
-  kafka:
-    bootstrap-servers: localhost:9092
-    consumer:
-      group-id: product-service
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-      properties:
-        spring.json.trusted.packages: "*"
-        spring.json.value.default.type: com.project.lendmate.event.StockDecreaseEvent
 
 aws:
   accessKeyId: AKIAT25QXJXDR3JVEHWM

@@ -28,6 +28,7 @@ public class ProductResponse {
     private BigDecimal depositAmount;
     private List<ProductImageResponse> images;
     private List<ProductCommentResponse> comments;
+    private List<ProductAvailabilityResponse> availabilities;
     private LocalDateTime createdAt;
     private LocalDateTime updateAt;
 }

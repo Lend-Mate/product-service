@@ -1,6 +1,7 @@
 package com.project.lendmate.repository.specification;
 
 import com.project.lendmate.dto.requestDto.ProductFilterRequest;
+import com.project.lendmate.model.Enum.Reason;
 import com.project.lendmate.model.Product;
 import com.project.lendmate.model.ProductAvailability;
 import jakarta.persistence.criteria.Root;
@@ -26,8 +27,10 @@ public class ProductSpecification {
             subquery.select(pa.get("productId"))
                     .where(
                             cb.equal(pa.get("productId"), root.get("id")),
-                            cb.lessThanOrEqualTo(pa.get("startDate"), now),
-                            cb.greaterThanOrEqualTo(pa.get("endDate"), now)
+                            pa.get("reason").in(Reason.BLOCKED, Reason.MAINTENANCE)
+                            //TODO: quantity > 0 kontolu yapılacak
+                           // cb.lessThanOrEqualTo(pa.get("startDate"), now),
+                            //cb.greaterThanOrEqualTo(pa.get("endDate"), now)
                     );
 
             return cb.not(cb.exists(subquery));

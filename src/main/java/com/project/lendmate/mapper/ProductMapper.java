@@ -1,10 +1,12 @@
 package com.project.lendmate.mapper;
 
+import com.project.lendmate.dto.responseDto.ProductAvailabilityResponse;
 import com.project.lendmate.dto.responseDto.ProductCommentResponse;
 import com.project.lendmate.dto.responseDto.ProductImageResponse;
 import com.project.lendmate.model.Product;
 import com.project.lendmate.dto.requestDto.ProductRequest;
 import com.project.lendmate.dto.responseDto.ProductResponse;
+import com.project.lendmate.model.ProductAvailability;
 import com.project.lendmate.model.ProductComment;
 import com.project.lendmate.model.ProductImage;
 import lombok.AllArgsConstructor;
@@ -18,6 +20,7 @@ import java.util.List;
 public class ProductMapper {
     private final ProductImageMapper productImageMapper;
     private final ProductCommentMapper productCommentMapper;
+    private final ProductAvailabilityMapper productAvailabilityMapper;
 
     public Product toEntity(ProductRequest productRequest){
         if(productRequest == null) return null;
@@ -56,6 +59,7 @@ public class ProductMapper {
                 .depositAmount(product.getDepositAmount())
                 .images(mapImages(product.getImages()))
                 .comments(mapComments(product.getComments()))
+                .availabilities(mapAvailabilities(product.getAvailabilities()))
                 .createdAt(product.getCreatedAt())
                 .updateAt(product.getUpdatedAt())
                 .build();
@@ -84,5 +88,10 @@ public class ProductMapper {
     private List<ProductCommentResponse> mapComments(List<ProductComment> comments) {
         if (comments == null) return List.of();
         return comments.stream().map(productCommentMapper::toDto).toList();
+    }
+
+    private List<ProductAvailabilityResponse> mapAvailabilities(List<ProductAvailability> availabilities) {
+        if (availabilities == null) return List.of();
+        return availabilities.stream().map(productAvailabilityMapper::toDto).toList();
     }
 }

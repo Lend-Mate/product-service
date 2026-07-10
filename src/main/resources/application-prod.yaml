@@ -10,3 +10,13 @@ spring:
     uris: http://elasticsearch:9200
     repositories:
       enabled: true
+
+  kafka:
+    bootstrap-servers: lendmate-kafka:9092
+    consumer:
+      group-id: product-service
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+        spring.json.value.default.type: com.project.lendmate.event.StockDecreaseEvent

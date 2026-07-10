@@ -10,6 +10,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class ProductSpecification {
 
@@ -43,11 +44,15 @@ public class ProductSpecification {
         spec = spec.and(isNotDeleted());
         spec = spec.and(isAvailable());
 
+        if (filter.getQuery() != null) {
+            spec = spec.and(matchProductNameOrDescription(filter.getQuery()));
+        }
+
         if (filter.getCategoryId() != null) {
             spec = spec.and(hasCategoryId(filter.getCategoryId()));
         }
-        if (filter.getBrand() != null) {
-            spec = spec.and(hasBrand(filter.getBrand()));
+        if (filter.getBrands() != null && !filter.getBrands().isEmpty()) {
+            spec = spec.and(hasBrands(filter.getBrands()));
         }
         if (filter.getMinPrice() != null) {
             spec = spec.and(hasPriceGreaterThan(filter.getMinPrice()));
@@ -65,14 +70,34 @@ public class ProductSpecification {
         return spec;
     }
 
+    private static Specification<Product> matchProductNameOrDescription(String query) {
+        return (root, criteriaQuery, cb) -> {
+            // Eğer arama metni boşsa, filtreleme yapma (koşulsuz geç)
+            if (query == null || query.trim().isEmpty()) {
+                return null;
+            }
+
+            // Küçük/büyük harf duyarlılığını ortadan kaldırmak için metni küçültüyoruz
+            String lowerCaseQuery = "%" + query.toLowerCase() + "%";
+
+            // 1. Koşul: Name alanı sorguyu içeriyor mu?
+            var namePredicate = cb.like(cb.lower(root.get("productName")), lowerCaseQuery);
+
+            // 2. Koşul: Description alanı sorguyu içeriyor mu?
+            var descriptionPredicate = cb.like(cb.lower(root.get("description")), lowerCaseQuery);
+
+            // İki koşulu OR (veya) ile birleştiriyoruz
+            return cb.or(namePredicate, descriptionPredicate);
+        };
+    }
+
     private static Specification<Product> hasCategoryId(Long id) {
         return (root, query, cb) ->
                 id == null ? null : cb.equal(root.get("categoryId"), id);
     }
 
-    private static Specification<Product> hasBrand(String brand) {
-        return (root, query, cb) ->
-                brand == null ? null : cb.like(cb.lower(root.get("brand")), "%" + brand.toLowerCase() + "%");
+    private static Specification<Product> hasBrands(List<String> brands) {
+        return (root, query, cb) -> root.get("brand").in(brands);
     }
 
     private static Specification<Product> hasPriceGreaterThan(BigDecimal minPrice) {

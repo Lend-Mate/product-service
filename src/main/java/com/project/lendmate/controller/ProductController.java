@@ -17,6 +17,7 @@ import com.project.lendmate.dto.responseDto.ProductResponse;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 @AllArgsConstructor
 @RestController
@@ -26,19 +27,19 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping("/health")
-    public String healthCheck(){
+    public String healthCheck() {
         return "product service is up and working...";
     }
 
     @PostMapping
-    public ResponseEntity<ProductResponse> createProduct(@Valid @RequestBody ProductRequest request){
+    public ResponseEntity<ProductResponse> createProduct(@Valid @RequestBody ProductRequest request) {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(productService.createProduct(request));
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<ProductResponse> getProduct(@PathVariable Long id){
+    public ResponseEntity<ProductResponse> getProduct(@PathVariable Long id) {
 
         return ResponseEntity.ok(productService.getProductById(id));
     }
@@ -56,7 +57,7 @@ public class ProductController {
             @RequestParam(required = false) BigDecimal maxPrice,
             @RequestParam(required = false) Integer minRentalDays,
             @RequestParam(required = false) Integer maxRentalDays
-    ){
+    ) {
         ProductFilterRequest filter = ProductFilterRequest.builder()
                 .categoryId(categoryId)
                 .brands(brands)
@@ -70,13 +71,13 @@ public class ProductController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<ProductResponse> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductRequest productRequest){
+    public ResponseEntity<ProductResponse> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductRequest productRequest) {
 
         return ResponseEntity.ok(productService.updateProduct(id, productRequest));
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long id){
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
 
         productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
@@ -145,5 +146,10 @@ public class ProductController {
                 .build();
 
         return ResponseEntity.ok(productService.getUniqueBrands(filter));
+    }
+
+    @PostMapping("/internal/quantities")
+    public ResponseEntity<Map<Long, Integer>> getProductQuantities(@RequestBody List<Long> ids) {
+        return ResponseEntity.ok(productService.getProductQuantities(ids));
     }
 }

@@ -7,6 +7,7 @@ import com.project.lendmate.dto.responseDto.ProductResponse;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ProductService {
     ProductResponse getProductById(Long id);
@@ -18,4 +19,5 @@ public interface ProductService {
     List<ProductResponse> getProductsByIds(List<Long> ids);
     Page<Long> searchProductsByIds(ProductSearchFilterRequest filter, String query, int page, int size, String sortBy, boolean ascending);
     List<String> getUniqueBrands(ProductFilterRequest filter);
+    Map<Long, Integer> getProductQuantities(List<Long> ids);
 }

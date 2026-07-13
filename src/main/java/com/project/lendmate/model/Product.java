@@ -1,6 +1,5 @@
 package com.project.lendmate.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.project.lendmate.model.Enum.Currency;
 import jakarta.persistence.*;
 import lombok.*;
@@ -35,7 +34,7 @@ public class Product {
 
     private String brand;
 
-    private int stockQuantity;
+    private Integer stockQuantity;
 
     private int minRentalDays;
 

@@ -9,6 +9,7 @@ import com.project.lendmate.expection.ProductAlreadyExistsException;
 import com.project.lendmate.expection.ProductNotFoundException;
 import com.project.lendmate.mapper.ProductMapper;
 import com.project.lendmate.model.Product;
+import com.project.lendmate.model.projection.ProductQuantityProjection;
 import com.project.lendmate.repository.ProductRepository;
 import com.project.lendmate.repository.ProductSearchRepository;
 import com.project.lendmate.repository.specification.ProductElasticsearchQueryBuilder;
@@ -26,6 +27,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -109,5 +112,12 @@ public class ProductServiceImpl implements ProductService {
     public List<String> getUniqueBrands(ProductFilterRequest filter) {
         Specification<Product> spec = ProductSpecification.withFilters(filter);
         return productRepository.findDistinctBrands(spec);
+    }
+
+    @Override
+    public Map<Long, Integer> getProductQuantities(List<Long> ids) {
+        List<ProductQuantityProjection> quantities = productRepository.findByIdIn(ids);
+        return quantities.stream()
+                .collect(Collectors.toMap(ProductQuantityProjection::getId, ProductQuantityProjection::getStockQuantity));
     }
 }

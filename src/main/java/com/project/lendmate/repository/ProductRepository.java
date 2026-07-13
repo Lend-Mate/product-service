@@ -1,6 +1,7 @@
 package com.project.lendmate.repository;
 
 import com.project.lendmate.model.Product;
+import com.project.lendmate.model.projection.ProductQuantityProjection;
 import com.project.lendmate.repository.productrepository.ProductRepositoryCustom;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -16,4 +17,6 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
     Optional<Product> findByIdAndDeletedFalse(Long productId);
 
     void deleteAllByOwnerId(Long id);
+
+    List<ProductQuantityProjection> findByIdIn(List<Long> ids);
 }

@@ -11,6 +11,6 @@ import java.util.List;
 @Repository
 public interface ProductAvailabilityRepository extends JpaRepository<ProductAvailability, Long> {
 
-    List<ProductAvailability> findByReasonAndEndDateAfter(Reason reason, LocalDateTime date);
+    List<ProductAvailability> findByReasonAndEndDateBefore(Reason reason, LocalDateTime date);
 
 }

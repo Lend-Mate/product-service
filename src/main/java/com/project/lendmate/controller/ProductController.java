@@ -119,8 +119,10 @@ public class ProductController {
 
         List<ProductResponse> products = productService.getProductsByIds(productIds.getContent());
 
-        products.removeIf(product -> product.getAvailabilities().stream()
-                .anyMatch(availability -> availability.getReason().equals(Reason.BLOCKED) || availability.getReason().equals(Reason.MAINTENANCE)));
+        products = products.stream()
+                .filter(product -> product.getAvailabilities().stream()
+                        .noneMatch(availability -> availability.getReason().equals(Reason.BLOCKED) || availability.getReason().equals(Reason.MAINTENANCE)))
+                .toList();
 
         Page<ProductResponse> result = new PageImpl<>(
                 products,

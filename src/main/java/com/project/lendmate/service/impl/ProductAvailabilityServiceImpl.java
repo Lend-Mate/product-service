@@ -48,10 +48,11 @@ public class ProductAvailabilityServiceImpl implements ProductAvailabilityServic
     @Override
     @Transactional
     public int processExpiredRentedProducts(LocalDateTime date) {
-        List<ProductAvailability> expiredRecords = repository.findByReasonAndEndDateBefore(Reason.RENTED, date);
+        List<ProductAvailability> expiredRecords = repository.findByEndDateBefore(date);
         if(expiredRecords.isEmpty()) return 0;
 
         Map<Long, Long> productIdAndCount = expiredRecords.stream()
+                .filter(record -> record.getReason() == Reason.RENTED)
                 .collect(Collectors.groupingBy(
                         ProductAvailability::getProductId, Collectors.counting()));
         for (Map.Entry<Long, Long> entry: productIdAndCount.entrySet()) {

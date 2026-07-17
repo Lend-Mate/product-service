@@ -2,7 +2,6 @@ package com.project.lendmate.controller;
 
 import com.project.lendmate.dto.requestDto.ProductFilterRequest;
 import com.project.lendmate.dto.requestDto.ProductSearchFilterRequest;
-import com.project.lendmate.model.Enum.Reason;
 import com.project.lendmate.service.ProductService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -118,11 +117,6 @@ public class ProductController {
         Page<Long> productIds = productService.searchProductsByIds(filter, text, page, size, sortBy, ascending);
 
         List<ProductResponse> products = productService.getProductsByIds(productIds.getContent());
-
-        products = products.stream()
-                .filter(product -> product.getAvailabilities().stream()
-                        .noneMatch(availability -> availability.getReason().equals(Reason.BLOCKED) || availability.getReason().equals(Reason.MAINTENANCE)))
-                .toList();
 
         Page<ProductResponse> result = new PageImpl<>(
                 products,

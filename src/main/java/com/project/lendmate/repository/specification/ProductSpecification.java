@@ -20,8 +20,6 @@ public class ProductSpecification {
 
     private static Specification<Product> isAvailable() {
         return (root, query, cb) -> {
-            LocalDateTime now = LocalDateTime.now();
-
             Subquery<Long> subquery = query.subquery(Long.class);
             Root<ProductAvailability> pa = subquery.from(ProductAvailability.class);
 
@@ -29,9 +27,6 @@ public class ProductSpecification {
                     .where(
                             cb.equal(pa.get("productId"), root.get("id")),
                             pa.get("reason").in(Reason.BLOCKED, Reason.MAINTENANCE)
-                            //TODO: quantity > 0 kontolu yapılacak
-                           // cb.lessThanOrEqualTo(pa.get("startDate"), now),
-                            //cb.greaterThanOrEqualTo(pa.get("endDate"), now)
                     );
 
             return cb.not(cb.exists(subquery));

@@ -24,7 +24,7 @@ public class ProductAvailabilityController {
     }
 
     @DeleteMapping
-    public ResponseEntity<ProductAvailabilityResponse> deleteProductAvailabilityRecord(@RequestBody Long id){
+    public ResponseEntity<ProductAvailabilityResponse> deleteProductAvailabilityRecord(@RequestParam Long id){
         productAvailabilityService.deleteProductAvailabilityRecord(id);
         return ResponseEntity.noContent().build();
     }

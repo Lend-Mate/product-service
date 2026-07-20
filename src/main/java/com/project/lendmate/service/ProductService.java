@@ -12,6 +12,7 @@ import java.util.Map;
 public interface ProductService {
     ProductResponse getProductById(Long id);
     Page<ProductResponse> getAllProducts(int page, int size, String sortBy, boolean ascending, ProductFilterRequest filter);
+    List<ProductResponse> getAllProductsByOwnerId(Long id);
     ProductResponse updateProduct(Long id, ProductRequest productRequest);
     ProductResponse createProduct(ProductRequest productRequest);
     void deleteProduct(Long productId);

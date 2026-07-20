@@ -58,6 +58,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<ProductResponse> getAllProductsByOwnerId(Long id) {
+        List<Product> products = productRepository.findAllByOwnerId(id);
+        return products.stream().map(mapper::toDto).toList();
+    }
+
+    @Override
     public ProductResponse updateProduct(Long id, ProductRequest productRequest) {
         Product product = productRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new ProductNotFoundException("Ürün bulunamadı: " + id));

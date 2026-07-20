@@ -158,4 +158,9 @@ public class ProductController {
     public ResponseEntity<Map<Long, Integer>> getProductQuantities(@RequestBody List<Long> ids) {
         return ResponseEntity.ok(productService.getProductQuantities(ids));
     }
+
+    @GetMapping(value = "/user/{id}")
+    public ResponseEntity<List<ProductResponse>> getAllProductsByOwnerId(@PathVariable Long id) {
+        return ResponseEntity.ok(productService.getAllProductsByOwnerId(id));
+    }
 }

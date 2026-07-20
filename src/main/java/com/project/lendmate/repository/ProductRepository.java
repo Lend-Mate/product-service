@@ -26,6 +26,4 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
     @Modifying
     @Query("update Product p set p.stockQuantity = p.stockQuantity + :amount where p.id = :productId")
     void incrementStock(@Param("productId") Long productId, @Param("amount")  Integer amount);
-
-    List<Product> findAllByOwnerId(Long id);
 }

@@ -160,7 +160,16 @@ public class ProductController {
     }
 
     @GetMapping(value = "/user/{id}")
-    public ResponseEntity<List<ProductResponse>> getAllProductsByOwnerId(@PathVariable Long id) {
-        return ResponseEntity.ok(productService.getAllProductsByOwnerId(id));
+    public ResponseEntity<Page<ProductResponse>> getAllProductsByOwnerId(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "true") boolean ascending,
+            @RequestParam Long ownerId
+    ) {
+        ProductFilterRequest filter = ProductFilterRequest.builder()
+                .ownerId(ownerId)
+                .build();
+        return ResponseEntity.ok(productService.getAllProducts(page, size, sortBy, ascending, filter));
     }
 }

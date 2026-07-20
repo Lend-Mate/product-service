@@ -38,7 +38,12 @@ public class ProductSpecification {
         Specification<Product> spec = Specification.unrestricted();
 
         spec = spec.and(isNotDeleted());
-        spec = spec.and(isAvailable());
+
+        if (filter.getOwnerId() != null) {
+            spec = spec.and(hasOwnerId(filter.getOwnerId()));
+        } else{
+            spec = spec.and(isAvailable());
+        }
 
         if (filter.getQuery() != null) {
             spec = spec.and(matchProductNameOrDescription(filter.getQuery()));
@@ -85,6 +90,11 @@ public class ProductSpecification {
             // İki koşulu OR (veya) ile birleştiriyoruz
             return cb.or(namePredicate, descriptionPredicate);
         };
+    }
+
+    private static Specification<Product> hasOwnerId(Long id) {
+        return (root, query, cb) ->
+                id == null ? null : cb.equal(root.get("ownerId"), id);
     }
 
     private static Specification<Product> hasCategoryId(Long id) {

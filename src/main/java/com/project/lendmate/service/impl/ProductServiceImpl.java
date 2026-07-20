@@ -7,6 +7,7 @@ import com.project.lendmate.dto.requestDto.ProductSearchFilterRequest;
 import com.project.lendmate.dto.responseDto.ProductResponse;
 import com.project.lendmate.expection.ProductAlreadyExistsException;
 import com.project.lendmate.expection.ProductNotFoundException;
+import com.project.lendmate.expection.UnknownException;
 import com.project.lendmate.mapper.ProductMapper;
 import com.project.lendmate.model.Product;
 import com.project.lendmate.model.projection.ProductQuantityProjection;
@@ -26,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -59,8 +61,12 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductResponse> getAllProductsByOwnerId(Long id) {
-        List<Product> products = productRepository.findAllByOwnerId(id);
-        return products.stream().map(mapper::toDto).toList();
+        try {
+            List<Product> products = productRepository.findAllByOwnerId(id);
+            return products.stream().map(mapper::toDto).toList();
+        } catch (Exception ex){
+            throw new UnknownException(ex.getMessage());
+        }
     }
 
     @Override

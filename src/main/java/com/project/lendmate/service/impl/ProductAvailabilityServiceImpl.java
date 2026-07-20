@@ -34,6 +34,11 @@ public class ProductAvailabilityServiceImpl implements ProductAvailabilityServic
     }
 
     @Override
+    public void deleteProductAvailabilityRecord(Long id) {
+        repository.deleteById(id);
+    }
+
+    @Override
     public ProductAvailabilityResponse getProductAvailabilities(long productId) {
         ProductAvailability availability = repository.findById(productId).orElseThrow(()-> new ProductAvailabilityNotFound("Product Availability cannot found"));
         return mapper.toDto(availability);

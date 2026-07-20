@@ -23,6 +23,12 @@ public class ProductAvailabilityController {
                 .body(productAvailabilityService.createProductAvailabilityRecord(request));
     }
 
+    @DeleteMapping
+    public ResponseEntity<ProductAvailabilityResponse> deleteProductAvailabilityRecord(@RequestBody Long id){
+        productAvailabilityService.deleteProductAvailabilityRecord(id);
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping("/internal/expired-rented")
     public ResponseEntity<Map<String, Integer>> getProductsByExpiredDateAndReason(@RequestParam(required = false) LocalDateTime date) {
         LocalDateTime currentDate = (date != null) ? date : LocalDateTime.now();

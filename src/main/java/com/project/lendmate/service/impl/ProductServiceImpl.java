@@ -9,6 +9,7 @@ import com.project.lendmate.expection.ProductAlreadyExistsException;
 import com.project.lendmate.expection.ProductNotFoundException;
 import com.project.lendmate.expection.UnknownException;
 import com.project.lendmate.mapper.ProductMapper;
+import com.project.lendmate.model.Enum.RentalPeriod;
 import com.project.lendmate.model.Product;
 import com.project.lendmate.model.projection.ProductQuantityProjection;
 import com.project.lendmate.repository.ProductRepository;
@@ -16,6 +17,7 @@ import com.project.lendmate.repository.ProductSearchRepository;
 import com.project.lendmate.repository.specification.ProductElasticsearchQueryBuilder;
 import com.project.lendmate.repository.specification.ProductSpecification;
 import com.project.lendmate.service.ProductService;
+import com.project.lendmate.util.RentalPriceCalculator;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -26,6 +28,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +49,9 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponse getProductById(Long productId) {
         Product product = productRepository.findByIdAndDeletedFalse(productId)
                 .orElseThrow(() -> new ProductNotFoundException("Ürün bulunamadı: " + productId));
-        return mapper.toDto(product);
+        ProductResponse productResponse = mapper.toDto(product);
+        productResponse.setRentalPeriodPrices(getPeriodPrices(product));
+        return productResponse;
     }
 
     @Override
@@ -56,7 +61,11 @@ public class ProductServiceImpl implements ProductService {
 
        Specification<Product> spec = ProductSpecification.withFilters(filter);
        Page<Product> products = productRepository.findAll(spec, pageable);
-       return products.map(mapper::toDto);
+       return products.map(product -> {
+           ProductResponse productResponse = mapper.toDto(product);
+           productResponse.setRentalPeriodPrices(getPeriodPrices(product));
+           return productResponse;
+       });
     }
 
     @Override
@@ -121,5 +130,13 @@ public class ProductServiceImpl implements ProductService {
         List<ProductQuantityProjection> quantities = productRepository.findByIdIn(ids);
         return quantities.stream()
                 .collect(Collectors.toMap(ProductQuantityProjection::getId, ProductQuantityProjection::getStockQuantity));
+    }
+
+    private Map<RentalPeriod, BigDecimal> getPeriodPrices(Product product) {
+       return product.getAvailablePeriods().stream()
+                .collect(Collectors.toMap(
+                        period -> period,
+                        period -> RentalPriceCalculator.calculateTotalPrice(product.getPrice(), period)));
+
     }
 }

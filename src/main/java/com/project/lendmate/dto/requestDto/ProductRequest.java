@@ -1,10 +1,12 @@
 package com.project.lendmate.dto.requestDto;
 
 import com.project.lendmate.model.Enum.Currency;
+import com.project.lendmate.model.Enum.RentalPeriod;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 @Data
 @Builder
@@ -39,11 +41,8 @@ public class ProductRequest {
     @PositiveOrZero(message = "Stock quantity cannot be negative")
     private Integer stockQuantity;
 
-    @Min(value = 1, message = "Minimum rental day must be at least 1")
-    private Integer minRentalDays;
-
-    @Min(value = 1, message = "Maximum rental day must be at least 1")
-    private Integer maxRentalDays;
+    @NotEmpty(message = "At least one rental period must be selected.")
+    private Set<RentalPeriod> availablePeriods;
 
     @NotNull(message = "Deposit amount is mandatory")
     @PositiveOrZero(message = "Deposit amount must be positive or zero")

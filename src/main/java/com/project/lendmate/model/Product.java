@@ -1,12 +1,15 @@
 package com.project.lendmate.model;
 
 import com.project.lendmate.model.Enum.Currency;
+import com.project.lendmate.model.Enum.RentalPeriod;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @NoArgsConstructor
@@ -36,9 +39,14 @@ public class Product {
 
     private Integer stockQuantity;
 
-    private int minRentalDays;
-
-    private int maxRentalDays;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(
+            name = "product_rental_periods",
+            joinColumns = @JoinColumn(name = "product_id")
+    )
+    @Enumerated(EnumType.STRING)
+    @Column(name = "period", nullable = false)
+    private Set<RentalPeriod> availablePeriods;
 
     private BigDecimal depositAmount;
 

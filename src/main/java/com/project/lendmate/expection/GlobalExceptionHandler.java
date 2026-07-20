@@ -47,7 +47,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(UnknownException.class)
-    public ResponseEntity<ErrorResponse> handleUnknownError(CommentNotFoundException ex) {
+    public ResponseEntity<ErrorResponse> handleUnknownError(UnknownException ex) {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage()));

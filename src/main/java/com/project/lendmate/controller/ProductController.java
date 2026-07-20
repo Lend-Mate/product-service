@@ -159,7 +159,7 @@ public class ProductController {
         return ResponseEntity.ok(productService.getProductQuantities(ids));
     }
 
-    @GetMapping(value = "/user/{id}")
+    @GetMapping(value = "/user")
     public ResponseEntity<Page<ProductResponse>> getAllProductsByOwnerId(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,

@@ -38,4 +38,13 @@ public class LoggingAspect {
             }
         }
     }
+
+    @AfterThrowing(pointcut = "serviceLayer()", throwing = "exception")
+    public void logAfterThrowing(JoinPoint joinPoint, Throwable exception) {
+        log.error("[EXCEPTION] {} | cause: {} | message: {}",
+                joinPoint.getSignature().toShortString(),
+                exception.getClass().getSimpleName(),
+                exception.getMessage(),
+                exception); // Dilersen stack trace'i de yazdırmak için exception nesnesini en sona ekleyebilirsin
+    }
 }

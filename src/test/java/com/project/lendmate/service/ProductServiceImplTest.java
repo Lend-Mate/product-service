@@ -5,6 +5,7 @@ import com.project.lendmate.dto.responseDto.ProductResponse;
 import com.project.lendmate.expection.ProductAlreadyExistsException;
 import com.project.lendmate.expection.ProductNotFoundException;
 import com.project.lendmate.mapper.ProductMapper;
+import com.project.lendmate.model.Enum.RentalPeriod;
 import com.project.lendmate.model.Product;
 import com.project.lendmate.repository.ProductRepository;
 import com.project.lendmate.service.impl.ProductServiceImpl;
@@ -15,7 +16,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -43,6 +46,11 @@ class ProductServiceImplTest {
         product.setId(1L);
         product.setOwnerId(1L);
         product.setProductName("Kamera");
+
+        Set<RentalPeriod> rentalPeriods = new HashSet<>();
+        rentalPeriods.add(RentalPeriod.ONE_MONTH);
+        rentalPeriods.add(RentalPeriod.SIX_MONTH);
+        product.setAvailablePeriods(rentalPeriods);
 
         productRequest = new ProductRequest();
         productRequest.setOwnerId(1L);

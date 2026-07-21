@@ -16,6 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -46,6 +47,7 @@ class ProductServiceImplTest {
         product.setId(1L);
         product.setOwnerId(1L);
         product.setProductName("Kamera");
+        product.setPrice(new BigDecimal(1000));
 
         Set<RentalPeriod> rentalPeriods = new HashSet<>();
         rentalPeriods.add(RentalPeriod.ONE_MONTH);

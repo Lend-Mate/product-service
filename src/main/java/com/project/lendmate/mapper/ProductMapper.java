@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -96,9 +98,12 @@ public class ProductMapper {
 
     private Map<RentalPeriod, BigDecimal> getPeriodPrices(Product product) {
         return product.getAvailablePeriods().stream()
+                .sorted(Comparator.comparingInt(RentalPeriod::getMonths))
                 .collect(Collectors.toMap(
                         period -> period,
-                        period -> RentalPriceCalculator.calculateTotalPrice(product.getPrice(), period)));
+                        period -> RentalPriceCalculator.calculateTotalPrice(product.getPrice(), period),
+                        (p1, p2) -> p1,
+                        LinkedHashMap::new));
 
     }
 }

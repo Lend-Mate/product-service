@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
 @AllArgsConstructor
@@ -27,10 +28,12 @@ public class ProductAvailabilityServiceImpl implements ProductAvailabilityServic
     private final ProductRepository productRepository;
 
     @Override
-    public ProductAvailabilityResponse createProductAvailabilityRecord(ProductAvailabilityRequest request) {
-        ProductAvailability model = mapper.toEntity(request);
-        ProductAvailability savedRecord = repository.save(model);
-        return mapper.toDto(savedRecord);
+    public List<ProductAvailabilityResponse> createProductAvailabilityRecord(ProductAvailabilityRequest request) {
+        List<ProductAvailability> models = IntStream.range(0, request.getQuantity())
+                .mapToObj(i -> mapper.toEntity(request))
+                .toList();
+        List<ProductAvailability> savedRecords = repository.saveAll(models);
+        return savedRecords.stream().map(mapper::toDto).toList();
     }
 
     @Override

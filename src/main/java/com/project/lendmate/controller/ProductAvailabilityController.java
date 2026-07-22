@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 @AllArgsConstructor
@@ -18,7 +19,7 @@ public class ProductAvailabilityController {
     private final ProductAvailabilityService productAvailabilityService;
 
     @PostMapping
-    public ResponseEntity<ProductAvailabilityResponse> createProductAvailabilityRecord(@RequestBody ProductAvailabilityRequest request){
+    public ResponseEntity<List<ProductAvailabilityResponse>> createProductAvailabilityRecord(@RequestBody ProductAvailabilityRequest request){
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(productAvailabilityService.createProductAvailabilityRecord(request));
     }

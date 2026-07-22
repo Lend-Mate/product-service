@@ -1,16 +1,21 @@
 package com.project.lendmate.mapper;
 
 import com.project.lendmate.dto.responseDto.*;
+import com.project.lendmate.model.Enum.RentalPeriod;
 import com.project.lendmate.model.Product;
 import com.project.lendmate.dto.requestDto.ProductRequest;
 import com.project.lendmate.model.ProductAvailability;
 import com.project.lendmate.model.ProductComment;
 import com.project.lendmate.model.ProductImage;
+import com.project.lendmate.util.RentalPriceCalculator;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 @AllArgsConstructor
@@ -54,6 +59,7 @@ public class ProductMapper {
                 .images(mapImages(product.getImages()))
                 .comments(mapComments(product.getComments()))
                 .availabilities(mapAvailabilities(product.getAvailabilities()))
+                .rentalPeriodPrices(getPeriodPrices(product))
                 .createdAt(product.getCreatedAt())
                 .updateAt(product.getUpdatedAt())
                 .build();
@@ -86,5 +92,13 @@ public class ProductMapper {
     private List<ProductAvailabilityResponse> mapAvailabilities(List<ProductAvailability> availabilities) {
         if (availabilities == null) return List.of();
         return availabilities.stream().map(productAvailabilityMapper::toDto).toList();
+    }
+
+    private Map<RentalPeriod, BigDecimal> getPeriodPrices(Product product) {
+        return product.getAvailablePeriods().stream()
+                .collect(Collectors.toMap(
+                        period -> period,
+                        period -> RentalPriceCalculator.calculateTotalPrice(product.getPrice(), period)));
+
     }
 }

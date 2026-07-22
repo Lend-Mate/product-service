@@ -49,9 +49,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponse getProductById(Long productId) {
         Product product = productRepository.findByIdAndDeletedFalse(productId)
                 .orElseThrow(() -> new ProductNotFoundException("Ürün bulunamadı: " + productId));
-        ProductResponse productResponse = mapper.toDto(product);
-        productResponse.setRentalPeriodPrices(getPeriodPrices(product));
-        return productResponse;
+        return mapper.toDto(product);
     }
 
     @Override
@@ -61,11 +59,7 @@ public class ProductServiceImpl implements ProductService {
 
        Specification<Product> spec = ProductSpecification.withFilters(filter);
        Page<Product> products = productRepository.findAll(spec, pageable);
-       return products.map(product -> {
-           ProductResponse productResponse = mapper.toDto(product);
-           productResponse.setRentalPeriodPrices(getPeriodPrices(product));
-           return productResponse;
-       });
+           return products.map(mapper::toDto);
     }
 
     @Override
@@ -130,13 +124,5 @@ public class ProductServiceImpl implements ProductService {
         List<ProductQuantityProjection> quantities = productRepository.findByIdIn(ids);
         return quantities.stream()
                 .collect(Collectors.toMap(ProductQuantityProjection::getId, ProductQuantityProjection::getStockQuantity));
-    }
-
-    private Map<RentalPeriod, BigDecimal> getPeriodPrices(Product product) {
-       return product.getAvailablePeriods().stream()
-                .collect(Collectors.toMap(
-                        period -> period,
-                        period -> RentalPriceCalculator.calculateTotalPrice(product.getPrice(), period)));
-
     }
 }

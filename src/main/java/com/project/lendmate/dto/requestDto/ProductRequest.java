@@ -6,6 +6,7 @@ import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -48,4 +49,6 @@ public class ProductRequest {
     @PositiveOrZero(message = "Deposit amount must be positive or zero")
     @Digits(integer = 10, fraction = 2)
     private BigDecimal depositAmount;
+
+    private List<ProductAttributeRequest> attributes;
 }

@@ -16,6 +16,7 @@ import com.project.lendmate.repository.ProductRepository;
 import com.project.lendmate.repository.ProductSearchRepository;
 import com.project.lendmate.repository.specification.ProductElasticsearchQueryBuilder;
 import com.project.lendmate.repository.specification.ProductSpecification;
+import com.project.lendmate.service.ProductAttributeService;
 import com.project.lendmate.service.ProductService;
 import com.project.lendmate.util.RentalPriceCalculator;
 import lombok.AllArgsConstructor;
@@ -40,7 +41,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
-    private final ProductSearchRepository productSearchRepository;
+    private final ProductAttributeService productAttributeService;
     private final ProductElasticsearchQueryBuilder productElasticsearchQueryBuilder;
     private final ProductMapper mapper;
 
@@ -72,6 +73,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public ProductResponse createProduct(ProductRequest productRequest) {
         boolean isExists = productRepository.existsByOwnerIdAndProductName(productRequest.getOwnerId(), productRequest.getProductName());
         if (isExists) {
@@ -79,6 +81,9 @@ public class ProductServiceImpl implements ProductService {
         }
         Product product = mapper.toEntity(productRequest);
         Product savedProduct = productRepository.save(product);
+
+        productAttributeService.createProductAttributes(savedProduct.getId(), productRequest.getAttributes());
+
         return mapper.toDto(savedProduct);
     }
 

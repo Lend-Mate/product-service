@@ -1,12 +1,9 @@
 package com.project.lendmate.mapper;
 
 import com.project.lendmate.dto.responseDto.*;
+import com.project.lendmate.model.*;
 import com.project.lendmate.model.Enum.RentalPeriod;
-import com.project.lendmate.model.Product;
 import com.project.lendmate.dto.requestDto.ProductRequest;
-import com.project.lendmate.model.ProductAvailability;
-import com.project.lendmate.model.ProductComment;
-import com.project.lendmate.model.ProductImage;
 import com.project.lendmate.util.RentalPriceCalculator;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -25,6 +22,7 @@ public class ProductMapper {
     private final ProductImageMapper productImageMapper;
     private final ProductCommentMapper productCommentMapper;
     private final ProductAvailabilityMapper productAvailabilityMapper;
+    private final ProductAttributeMapper productAttributeMapper;
 
     public Product toEntity(ProductRequest productRequest){
         if(productRequest == null) return null;
@@ -61,6 +59,7 @@ public class ProductMapper {
                 .images(mapImages(product.getImages()))
                 .comments(mapComments(product.getComments()))
                 .availabilities(mapAvailabilities(product.getAvailabilities()))
+                .attributes(mapAttributes(product.getAttributes()))
                 .rentalPeriodPrices(getPeriodPrices(product))
                 .createdAt(product.getCreatedAt())
                 .updateAt(product.getUpdatedAt())
@@ -105,5 +104,10 @@ public class ProductMapper {
                         (p1, p2) -> p1,
                         LinkedHashMap::new));
 
+    }
+
+    private List<ProductAttributeResponse> mapAttributes(List<ProductAttribute> attributes) {
+        if (attributes == null) return List.of();
+        return attributes.stream().map(productAttributeMapper::toResponseDto).toList();
     }
 }

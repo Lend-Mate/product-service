@@ -66,4 +66,7 @@ public class Product {
 
     @OneToMany(mappedBy = "productId", cascade = CascadeType.ALL)
     private List<ProductAvailability> availabilities;
+
+    @OneToMany(mappedBy = "productId", cascade = CascadeType.ALL)
+    private List<ProductAttribute> attributes;
 }

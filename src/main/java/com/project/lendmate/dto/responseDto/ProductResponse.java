@@ -31,4 +31,5 @@ public class ProductResponse {
     private Map<RentalPeriod, BigDecimal> rentalPeriodPrices;
     private LocalDateTime createdAt;
     private LocalDateTime updateAt;
+    private List<ProductAttributeResponse> attributes;
 }

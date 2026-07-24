@@ -15,7 +15,7 @@ public class FavouriteResponse {
     private Long id;
     private Long productId;
     private Long userId;
-    private ProductResponse productResponse;
+    private ProductResponse product;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

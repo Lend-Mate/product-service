@@ -33,7 +33,7 @@ public class FavouriteMapper {
                 .id(favourite.getId())
                 .productId(favourite.getProductId())
                 .userId(favourite.getUserId())
-                .productResponse(productMapper.toDto(favourite.getProduct()))
+                .product(productMapper.toDto(favourite.getProduct()))
                 .createdAt(favourite.getCreatedAt())
                 .updatedAt(favourite.getUpdatedAt())
                 .build();

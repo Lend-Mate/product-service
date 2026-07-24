@@ -3,12 +3,15 @@ package com.project.lendmate.mapper;
 import com.project.lendmate.dto.requestDto.FavouriteRequest;
 import com.project.lendmate.dto.responseDto.FavouriteResponse;
 import com.project.lendmate.model.Favourite;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
 @Component
+@RequiredArgsConstructor
 public class FavouriteMapper {
+    private final ProductMapper productMapper;
 
     public Favourite toEntity(FavouriteRequest request) {
         if (request == null) {
@@ -30,7 +33,7 @@ public class FavouriteMapper {
                 .id(favourite.getId())
                 .productId(favourite.getProductId())
                 .userId(favourite.getUserId())
-                .product(favourite.getProduct())
+                .productResponse(productMapper.toDto(favourite.getProduct()))
                 .createdAt(favourite.getCreatedAt())
                 .updatedAt(favourite.getUpdatedAt())
                 .build();

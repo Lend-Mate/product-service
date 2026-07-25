@@ -1,6 +1,8 @@
 package com.project.lendmate.service;
 
+import com.project.lendmate.dto.requestDto.ProductAttributeRequest;
 import com.project.lendmate.dto.requestDto.ProductRequest;
+import com.project.lendmate.dto.responseDto.ProductAttributeResponse;
 import com.project.lendmate.dto.responseDto.ProductResponse;
 import com.project.lendmate.expection.ProductAlreadyExistsException;
 import com.project.lendmate.expection.ProductNotFoundException;
@@ -8,6 +10,7 @@ import com.project.lendmate.mapper.ProductMapper;
 import com.project.lendmate.model.Enum.RentalPeriod;
 import com.project.lendmate.model.Product;
 import com.project.lendmate.repository.ProductRepository;
+import com.project.lendmate.service.impl.ProductAttributeServiceImpl;
 import com.project.lendmate.service.impl.ProductServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,9 +20,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -36,6 +38,9 @@ class ProductServiceImplTest {
 
     @InjectMocks
     private ProductServiceImpl productService;
+
+    @Mock
+    private ProductAttributeServiceImpl productAttributeService;
 
     private Product product;
     private ProductRequest productRequest;
@@ -58,9 +63,17 @@ class ProductServiceImplTest {
         productRequest.setOwnerId(1L);
         productRequest.setProductName("Kamera");
 
+        List<ProductAttributeRequest> productAttributeRequestList = new ArrayList<>();
+        productAttributeRequestList.add(new ProductAttributeRequest(1L, "", "", LocalDateTime.now()));
+        productRequest.setAttributes(productAttributeRequestList);
+
         productResponse = new ProductResponse();
         productResponse.setId(1L);
         productResponse.setProductName("Kamera");
+
+        List<ProductAttributeResponse> productAttributeResponseList = new ArrayList<>();
+        productAttributeResponseList.add(new ProductAttributeResponse(1L, 1L,"", "", LocalDateTime.now()));
+        productResponse.setAttributes(productAttributeResponseList);
     }
 
     // ─── createProduct ───────────────────────────────────────
@@ -71,6 +84,7 @@ class ProductServiceImplTest {
         when(mapper.toEntity(productRequest)).thenReturn(product);
         when(productRepository.save(product)).thenReturn(product);
         when(mapper.toDto(product)).thenReturn(productResponse);
+        when(productAttributeService.createProductAttributes(product.getId(), productRequest.getAttributes())).thenReturn(productResponse.getAttributes());
 
         ProductResponse result = productService.createProduct(productRequest);
 

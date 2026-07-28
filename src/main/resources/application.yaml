@@ -8,7 +8,7 @@ server:
 
 spring:
   application:
-    name: lendmate
+    name: product-service
   profiles:
     active: dev
 

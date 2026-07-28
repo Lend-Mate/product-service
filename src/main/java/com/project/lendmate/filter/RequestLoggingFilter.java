@@ -15,14 +15,10 @@ import java.io.IOException;
 public class RequestLoggingFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if (log.isDebugEnabled()) {
-            log.debug("[REQUEST] {} {}", request.getMethod(), request.getRequestURI());
-        }
+        log.info("[REQUEST] {} {}", request.getMethod(), request.getRequestURI());
 
         filterChain.doFilter(request, response);
 
-        if (log.isDebugEnabled()) {
-            log.debug("[RESPONSE] {} {} | status: {}", request.getMethod(), request.getRequestURI(), response.getStatus());
-        }
+        log.info("[RESPONSE] {} {} | status: {}", request.getMethod(), request.getRequestURI(), response.getStatus());
     }
 }

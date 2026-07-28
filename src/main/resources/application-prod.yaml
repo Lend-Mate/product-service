@@ -20,3 +20,29 @@ spring:
       properties:
         spring.json.trusted.packages: "*"
         spring.json.value.default.type: com.project.lendmate.event.StockDecreaseEvent
+
+management:
+  otlp:
+    metrics:
+      export:
+        url: http://grafana-lgtm:4318/v1/metrics
+  opentelemetry:
+    tracing:
+      export:
+        otlp:
+          endpoint: http://grafana-lgtm:4318/v1/traces
+    logging:
+      export:
+        otlp:
+          endpoint: http://grafana-lgtm:4318/v1/logs
+  tracing:
+    sampling:
+      probability: 1.0
+
+server:
+  shutdown: immediate
+logging:
+  level:
+    com.project: INFO
+    org.springframework.boot.actuator.autoconfigure.opentelemetry: DEBUG
+    org.springframework.boot.docker.compose: DEBUG

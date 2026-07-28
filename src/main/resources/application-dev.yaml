@@ -39,7 +39,7 @@ otel:
   logs:
     exporter: otlp
   traces:
-    exporter: none
+    exporter: otlp
   metrics:
     exporter: otlp
   java:

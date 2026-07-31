@@ -4,6 +4,7 @@ import com.project.lendmate.model.Enum.Currency;
 import com.project.lendmate.model.Enum.RentalPeriod;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.BatchSize;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -39,7 +40,8 @@ public class Product {
 
     private Integer stockQuantity;
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @BatchSize(size = 10)
+    @ElementCollection
     @CollectionTable(
             name = "product_rental_periods",
             joinColumns = @JoinColumn(name = "product_id")
@@ -58,15 +60,19 @@ public class Product {
 
     private LocalDateTime deletedAt;
 
+    @BatchSize(size = 10)
     @OneToMany(mappedBy = "productId", cascade = CascadeType.ALL)
     private List<ProductImage> images;
 
+    @BatchSize(size = 10)
     @OneToMany(mappedBy = "productId", cascade = CascadeType.ALL)
     private List<ProductComment> comments;
 
+    @BatchSize(size = 10)
     @OneToMany(mappedBy = "productId", cascade = CascadeType.ALL)
     private List<ProductAvailability> availabilities;
 
+    @BatchSize(size = 10)
     @OneToMany(mappedBy = "productId", cascade = CascadeType.ALL)
     private List<ProductAttribute> attributes;
 }

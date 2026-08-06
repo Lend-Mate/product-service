@@ -25,35 +25,29 @@ management:
   otlp:
     metrics:
       export:
-        url: http://grafana-lgtm:4318/v1/metrics
-  opentelemetry:
+        enabled: true
+        url: http://otel-collector:4318/v1/metrics
+        step: 5s
     tracing:
-      export:
-        otlp:
-          endpoint: http://grafana-lgtm:4318/v1/traces
+      endpoint: http://otel-collector:4318/v1/traces
     logging:
       export:
-        otlp:
-          endpoint: http://grafana-lgtm:4318/v1/logs
+        endpoint: http://otel-collector:4318/v1/logs
+  endpoints:
+    web:
+      exposure:
+        include: "*" # actuator / metrics / health endpointlerini dışarı açar
+  metrics:
+    tags:
+      # Grafana dashboard'larının uygulamayı ayırt etmesi için service.name şarttır
+      application: ${spring.application.name:product-service}
   tracing:
     sampling:
       probability: 1.0
 
-otel:
-  exporter:
-    otlp:
-      endpoint: http://grafana-lgtm:4318
-  logs:
-    exporter: otlp
-  metrics:
-    exporter: otlp
-  traces:
-    exporter: otlp
-
 server:
   shutdown: immediate
+
 logging:
   level:
     com.project: INFO
-    org.springframework.boot.actuator.autoconfigure.opentelemetry: DEBUG
-    org.springframework.boot.docker.compose: DEBUG

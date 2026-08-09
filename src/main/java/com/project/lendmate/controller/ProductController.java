@@ -105,7 +105,37 @@ public class ProductController {
             @RequestParam(required = false) Integer minRentalDays,
             @RequestParam(required = false) Integer maxRentalDays) {
 
-        ProductSearchFilterRequest filter = ProductSearchFilterRequest.builder()
+//        ProductSearchFilterRequest filter = ProductSearchFilterRequest.builder()
+//                .query(text)
+//                .categoryId(categoryId)
+//                .brands(brands)
+//                .minPrice(minPrice)
+//                .maxPrice(maxPrice)
+//                .minRentalDays(minRentalDays)
+//                .maxRentalDays(maxRentalDays)
+//                .build();
+//
+//        Page<Long> productIds = productService.searchProductsByIds(filter, text, page, size, sortBy, ascending);
+//
+//
+//
+//        List<ProductResponse> products = productService.getProductsByIds(productIds.getContent());
+//
+//        products = products.stream()
+//                .filter(product -> product.getAvailabilities().stream()
+//                        .noneMatch(availability -> availability.getReason().equals(Reason.BLOCKED) || availability.getReason().equals(Reason.MAINTENANCE)))
+//                .toList();
+//
+//        Page<ProductResponse> result = new PageImpl<>(
+//                products,
+//                PageRequest.of(page, size),
+//                productIds.getTotalElements()
+//        );
+//
+//        return ResponseEntity.ok(result);
+
+
+        ProductFilterRequest filter = ProductFilterRequest.builder()
                 .query(text)
                 .categoryId(categoryId)
                 .brands(brands)
@@ -115,22 +145,7 @@ public class ProductController {
                 .maxRentalDays(maxRentalDays)
                 .build();
 
-        Page<Long> productIds = productService.searchProductsByIds(filter, text, page, size, sortBy, ascending);
-
-        List<ProductResponse> products = productService.getProductsByIds(productIds.getContent());
-
-        products = products.stream()
-                .filter(product -> product.getAvailabilities().stream()
-                        .noneMatch(availability -> availability.getReason().equals(Reason.BLOCKED) || availability.getReason().equals(Reason.MAINTENANCE)))
-                .toList();
-
-        Page<ProductResponse> result = new PageImpl<>(
-                products,
-                PageRequest.of(page, size),
-                productIds.getTotalElements()
-        );
-
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(productService.getAllProducts(page, size, sortBy, ascending, filter));
     }
 
     @GetMapping("/brands")

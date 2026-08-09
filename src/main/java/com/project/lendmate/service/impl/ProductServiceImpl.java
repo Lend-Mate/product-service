@@ -1,6 +1,6 @@
 package com.project.lendmate.service.impl;
 
-import com.project.lendmate.document.ProductDocument;
+//import com.project.lendmate.document.ProductDocument;
 import com.project.lendmate.dto.requestDto.ProductFilterRequest;
 import com.project.lendmate.dto.requestDto.ProductRequest;
 import com.project.lendmate.dto.requestDto.ProductSearchFilterRequest;
@@ -13,8 +13,8 @@ import com.project.lendmate.model.Enum.RentalPeriod;
 import com.project.lendmate.model.Product;
 import com.project.lendmate.model.projection.ProductQuantityProjection;
 import com.project.lendmate.repository.ProductRepository;
-import com.project.lendmate.repository.ProductSearchRepository;
-import com.project.lendmate.repository.specification.ProductElasticsearchQueryBuilder;
+//import com.project.lendmate.repository.ProductSearchRepository;
+//import com.project.lendmate.repository.specification.ProductElasticsearchQueryBuilder;
 import com.project.lendmate.repository.specification.ProductSpecification;
 import com.project.lendmate.service.ProductAttributeService;
 import com.project.lendmate.service.ProductService;
@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final ProductAttributeService productAttributeService;
-    private final ProductElasticsearchQueryBuilder productElasticsearchQueryBuilder;
+    //private final ProductElasticsearchQueryBuilder productElasticsearchQueryBuilder;
     private final ProductMapper mapper;
 
     @Override
@@ -114,8 +114,9 @@ public class ProductServiceImpl implements ProductService {
         Sort sort = ascending ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
         Pageable pageable = PageRequest.of(page, size, sort);
 
-        Page<ProductDocument> results = productElasticsearchQueryBuilder.searchWithFilters(filter, pageable);
-        return results.map(doc -> Long.valueOf(doc.getId()));
+        //Page<ProductDocument> results = productElasticsearchQueryBuilder.searchWithFilters(filter, pageable);
+        //return results.map(doc -> Long.valueOf(doc.getId()));
+        return null;
     }
 
     @Override

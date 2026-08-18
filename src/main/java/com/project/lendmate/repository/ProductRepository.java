@@ -3,10 +3,7 @@ package com.project.lendmate.repository;
 import com.project.lendmate.model.Product;
 import com.project.lendmate.model.projection.ProductQuantityProjection;
 import com.project.lendmate.repository.productrepository.ProductRepositoryCustom;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 

@@ -75,7 +75,10 @@ public class ProductMapper {
         if (request.getPrice() != null)         product.setPrice(request.getPrice());
         if (request.getBrand() != null)         product.setBrand(request.getBrand());
         if (request.getStockQuantity() != null) product.setStockQuantity(request.getStockQuantity());
-        if (request.getAvailablePeriods() != null) product.setAvailablePeriods(request.getAvailablePeriods());
+        if (request.getAvailablePeriods() != null) {
+            product.getAvailablePeriods().clear();
+            product.getAvailablePeriods().addAll(request.getAvailablePeriods());
+        }
         if (request.getDepositAmount() != null) product.setDepositAmount(request.getDepositAmount());
         product.setUpdatedAt(LocalDateTime.now());
     }

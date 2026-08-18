@@ -1,27 +1,22 @@
-springdoc:
-  api-docs:
-    path: /v3/api-docs
-  swagger-ui:
-    path: /swagger-ui.html
-server:
-  forward-headers-strategy: framework
-
 spring:
   application:
     name: product-service
   profiles:
-    active: dev
+    active: ${ACTIVE_PROFILE:dev}
 
-  jpa:
-    hibernate:
-      ddl-auto: validate
+server:
+  port: 8080
 
-aws:
-  accessKeyId: AKIAT25QXJXDR3JVEHWM
-  secretAccessKey: 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
-  region: us-east-1
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+    import: "optional:configserver:${CONFIG_SERVER_URL:http://localhost:8888}"
 
-
-
-
-
+---
+spring:
+  config:
+    activate:
+      on-profile: stage
+    import: "configserver:${CONFIG_SERVER_URL}"

@@ -20,3 +20,10 @@ spring:
     activate:
       on-profile: prod
     import: "configserver:${CONFIG_SERVER_URL}"
+
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+    import: "configserver:${CONFIG_SERVER_URL}"

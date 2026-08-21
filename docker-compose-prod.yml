@@ -23,8 +23,7 @@ services:
         -XX:+UseSerialGC 
         -Xss256k 
         -XX:MetaspaceSize=128m
-        -XX:MaxMetaspaceSize=180m
-
+        -XX:MaxMetaspaceSize=256m
     mem_limit: 450m
     restart: unless-stopped
     networks:

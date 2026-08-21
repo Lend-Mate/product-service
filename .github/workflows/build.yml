@@ -50,6 +50,8 @@ jobs:
           AWS_SECRET_ACCESS_KEY: W+T0V2boOWuFRS6D/iZzGWdFoHiDa2kGQjgkGwnP
           AWS_REGION: us-east-1
           CONFIG_SERVER_URL: http://178.104.91.123:8888
+          OTEL_EXPORTER_OTLP_ENDPOINT: http://178.104.91.123:4318
+          OTEL_SERVICE_NAME: product-service
 
   deploy:
     runs-on: ubuntu-latest

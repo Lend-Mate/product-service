@@ -1,5 +1,0 @@
-spring:
-  config:
-    activate:
-      on-profile: test
-    import: "configserver:${CONFIG_SERVER_URL:http://config-server:8888}"

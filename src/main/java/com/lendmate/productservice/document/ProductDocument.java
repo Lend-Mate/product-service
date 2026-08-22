@@ -1,4 +1,4 @@
-//package com.project.lendmate.document;
+//package com.lendmate.productservice.document;
 //
 //import lombok.*;
 //import org.springframework.data.annotation.Id;

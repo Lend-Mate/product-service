@@ -1,6 +1,6 @@
-//package com.project.lendmate.repository;
+//package com.lendmate.productservice.repository;
 //
-//import com.project.lendmate.document.ProductDocument;
+//import com.lendmate.productservice.document.ProductDocument;
 //import org.springframework.data.domain.Page;
 //import org.springframework.data.domain.Pageable;
 //import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;

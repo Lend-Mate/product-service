@@ -1,6 +1,6 @@
 package com.lendmate.productservice.service.impl;
 
-//import com.project.lendmate.document.ProductDocument;
+//import com.lendmate.productservice.document.ProductDocument;
 import com.lendmate.productservice.dto.requestDto.ProductFilterRequest;
 import com.lendmate.productservice.dto.requestDto.ProductRequest;
 import com.lendmate.productservice.dto.requestDto.ProductSearchFilterRequest;
@@ -11,8 +11,8 @@ import com.lendmate.productservice.mapper.ProductMapper;
 import com.lendmate.productservice.model.Product;
 import com.lendmate.productservice.model.projection.ProductQuantityProjection;
 import com.lendmate.productservice.repository.ProductRepository;
-//import com.project.lendmate.repository.ProductSearchRepository;
-//import com.project.lendmate.repository.specification.ProductElasticsearchQueryBuilder;
+//import com.lendmate.productservice.repository.ProductSearchRepository;
+//import com.lendmate.productservice.repository.specification.ProductElasticsearchQueryBuilder;
 import com.lendmate.productservice.repository.specification.ProductSpecification;
 import com.lendmate.productservice.service.ProductAttributeService;
 import com.lendmate.productservice.service.ProductService;

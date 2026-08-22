@@ -1,9 +1,9 @@
-//package com.project.lendmate.repository.specification;
+//package com.lendmate.productservice.repository.specification;
 //
 //import co.elastic.clients.elasticsearch._types.FieldValue;
 //import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
-//import com.project.lendmate.document.ProductDocument;
-//import com.project.lendmate.dto.requestDto.ProductSearchFilterRequest;
+//import com.lendmate.productservice.dto.requestDto.ProductSearchFilterRequest;
+//import com.lendmate.productservice.document.ProductDocument;
 //import lombok.RequiredArgsConstructor;
 //import org.springframework.data.domain.Page;
 //import org.springframework.data.domain.PageImpl;

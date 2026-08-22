@@ -1,8 +1,7 @@
-//package com.project.lendmate.event;
+//package com.lendmate.productservice.event;
 //
 //import com.fasterxml.jackson.databind.ObjectMapper;
-//import com.project.lendmate.repository.ProductRepository;
-//import com.project.lendmate.service.ProductService;
+//import com.lendmate.productservice.service.ProductService;
 //import lombok.AllArgsConstructor;
 //import lombok.extern.slf4j.Slf4j;
 //import org.springframework.kafka.annotation.KafkaListener;

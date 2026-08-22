@@ -1,4 +1,4 @@
-//package com.project.lendmate.config;
+//package com.lendmate.productservice.config;
 //
 //import com.fasterxml.jackson.databind.ObjectMapper;
 //import com.fasterxml.jackson.databind.SerializationFeature;

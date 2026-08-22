@@ -12,7 +12,7 @@ import java.util.Collection;
 @Component
 @Slf4j
 public class LoggingAspect {
-    @Pointcut("execution(* com.project.lendmate.service.*.*(..))")
+    @Pointcut("execution(* com.lendmate.productservice.service.*.*(..))")
     public void serviceLayer() {}
 
     @Before("serviceLayer()")

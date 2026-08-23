@@ -21,19 +21,17 @@ public class ProductQuantityConsumer {
     @RetryableTopic(attempts = "1", kafkaTemplate = "kafkaTemplate", dltStrategy = DltStrategy.FAIL_ON_ERROR)
     @KafkaListener(topics = "quantity-decrease-topic", groupId = "product-service")
     public void handleStockEvent(StockDecreaseEvent event) {
-        throw new RuntimeException("DLT Testi için bilerek fırlatılan hata!");
-
-//        event.getItems().forEach(item -> {
-//            ProductResponse product = productService.getProductById(item.getProductId());
-//            int updatedStock = product.getStockQuantity() - item.getQuantity();
-//            if (updatedStock < 0){
-//                throw new IllegalStateException("Yetersiz stock");
-//            }
-//            ProductRequest request = new ProductRequest();
-//            request.setStockQuantity(updatedStock);
-//            productService.updateProduct(item.getProductId(), request);
-//        });
-//        log.info("Tüm stoklar güncellendi - orderId={}", event.getOrderId());
+        event.getItems().forEach(item -> {
+            ProductResponse product = productService.getProductById(item.getProductId());
+            int updatedStock = product.getStockQuantity() - item.getQuantity();
+            if (updatedStock < 0){
+                throw new IllegalStateException("Yetersiz stock");
+            }
+            ProductRequest request = new ProductRequest();
+            request.setStockQuantity(updatedStock);
+            productService.updateProduct(item.getProductId(), request);
+        });
+        log.info("Tüm stoklar güncellendi - orderId={}", event.getOrderId());
     }
 
     @DltHandler

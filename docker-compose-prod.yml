@@ -14,9 +14,9 @@ services:
       SPRING_PROFILES_ACTIVE: prod
       OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
       OTEL_SERVICE_NAME: product-service
-      AWS_ACCESS_KEY_ID: AKIAT25QXJXDR3JVEHWM
-      AWS_SECRET_ACCESS_KEY: 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
-      AWS_REGION: us-east-1
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_REGION: ${AWS_REGION}
       CONFIG_SERVER_URL: http://config-server:8888
       JAVA_OPTS: >-
         -XX:MaxRAMPercentage=55.0 

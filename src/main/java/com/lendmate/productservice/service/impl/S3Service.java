@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class S3Service implements StorageService {
     private S3Client s3Client;
-    private final String bucketName = "lend-mate-bucket";
+    private final String bucketName = "lendmate-budget";
 
     @Override
     public String uploadFile(MultipartFile file) {
@@ -31,6 +31,7 @@ public class S3Service implements StorageService {
                             .bucket(bucketName)
                             .key(uniqueFileName)
                             .contentType(file.getContentType())
+                            .acl(ObjectCannedACL.PUBLIC_READ)
                             .build(),
                     RequestBody.fromBytes(file.getBytes()));
             log.info("File uploaded successfully: {}", uniqueFileName);

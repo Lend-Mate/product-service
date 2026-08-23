@@ -9,6 +9,7 @@ import com.lendmate.productservice.expection.ProductNotFoundException;
 import com.lendmate.productservice.mapper.ProductMapper;
 import com.lendmate.productservice.model.Enum.RentalPeriod;
 import com.lendmate.productservice.model.Product;
+import com.lendmate.productservice.model.projection.ProductQuantityProjection;
 import com.lendmate.productservice.repository.ProductRepository;
 import com.lendmate.productservice.service.impl.ProductAttributeServiceImpl;
 import com.lendmate.productservice.service.impl.ProductServiceImpl;
@@ -76,6 +77,36 @@ class ProductServiceImplTest {
         productResponse.setAttributes(productAttributeResponseList);
     }
 
+    @Test
+    void getProductsByIds_success() {
+        List<Product> products = List.of(product);
+        when(productRepository.findAllById(List.of(1L))).thenReturn(products);
+        when(mapper.toDto(product)).thenReturn(productResponse);
+
+        List<ProductResponse> result = productService.getProductsByIds(List.of(1L));
+
+        assertEquals(1, result.size());
+    }
+
+    @Test
+    void getProductQuantities_success() {
+        ProductQuantityProjection projection = mock(ProductQuantityProjection.class);
+        when(projection.getId()).thenReturn(1L);
+        when(projection.getStockQuantity()).thenReturn(5);
+        when(productRepository.findByIdIn(List.of(1L))).thenReturn(List.of(projection));
+
+        Map<Long, Integer> result = productService.getProductQuantities(List.of(1L));
+
+        assertEquals(5, result.get(1L));
+    }
+
+    @Test
+    void deleteProductsByOwner_success() {
+        productService.deleteProductsByOwner(1L);
+        verify(productRepository).deleteAllByOwnerId(1L);
+    }
+
+
     // ─── createProduct ───────────────────────────────────────
 
     @Test
@@ -100,7 +131,7 @@ class ProductServiceImplTest {
         assertThrows(ProductAlreadyExistsException.class,
                 () -> productService.createProduct(productRequest));
 
-        //verify(productRepository, never()).save(any());
+        verify(productRepository, never()).save(any());
     }
 
     // ─── getProductById ──────────────────────────────────────
@@ -182,7 +213,18 @@ class ProductServiceImplTest {
         when(productRepository.findByIdAndDeletedFalse(1L)).thenReturn(Optional.of(product));
 
         productService.deleteProduct(1L);
-
+        assertTrue(product.isDeleted());
+        assertNotNull(product.getDeletedAt());
         verify(productRepository).save(product);
+    }
+
+    @Test
+    void deleteProduct_notFound_throwsException() {
+        when(productRepository.findByIdAndDeletedFalse(99L)).thenReturn(Optional.empty());
+
+        assertThrows(ProductNotFoundException.class,
+                () -> productService.deleteProduct(99L));
+
+        verify(productRepository, never()).save(any());
     }
 }

@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
                 description = "JWT Authentication API"
         ),
         servers = {
-                @Server(url = "/", description = "Default Gateway URL")
+                @Server(url = "/api/", description = "Default Gateway URL")
         }
 )
 @SecurityScheme(

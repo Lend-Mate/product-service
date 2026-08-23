@@ -1,18 +1,18 @@
+# syntax=docker/dockerfile:1.4
 FROM maven:3.9-eclipse-temurin-21 AS build
 WORKDIR /app
 
-# Önce sadece pom.xml -> bağımlılıklar ayrı katmanda cache'lenir
 COPY pom.xml .
-RUN mvn dependency:go-offline -B
+RUN --mount=type=cache,target=/root/.m2,id=maven-repo,sharing=locked \
+    mvn dependency:go-offline -B
 
-# Kaynak kod en son -> sadece kod değişince bu adımdan itibaren yeniden çalışır
 COPY src ./src
-RUN mvn clean package -DskipTests -B
+RUN --mount=type=cache,target=/root/.m2,id=maven-repo,sharing=locked \
+    mvn clean package -DskipTests -B
 
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 
-# Root olmayan kullanıcı ile çalıştır (güvenlik)
 RUN addgroup -S spring && adduser -S spring -G spring
 
 COPY --from=build /app/target/*.jar app.jar

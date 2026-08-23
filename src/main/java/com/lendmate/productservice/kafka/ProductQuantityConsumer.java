@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.DltHandler;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.annotation.RetryableTopic;
+import org.springframework.kafka.retrytopic.DltStrategy;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,7 +18,7 @@ import org.springframework.stereotype.Service;
 public class ProductQuantityConsumer {
     private final ProductService productService;
 
-    @RetryableTopic(attempts = "1", kafkaTemplate = "kafkaTemplate")
+    @RetryableTopic(attempts = "1", kafkaTemplate = "kafkaTemplate", dltStrategy = DltStrategy.FAIL_ON_ERROR)
     @KafkaListener(topics = "quantity-decrease-topic", groupId = "product-service")
     public void handleStockEvent(StockDecreaseEvent event) {
         throw new RuntimeException("DLT Testi için bilerek fırlatılan hata!");

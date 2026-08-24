@@ -1,7 +1,5 @@
 package com.lendmate.productservice.kafka;
 
-import com.lendmate.productservice.dto.requestDto.ProductRequest;
-import com.lendmate.productservice.dto.responseDto.ProductResponse;
 import com.lendmate.productservice.event.StockDecreaseEvent;
 import com.lendmate.productservice.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -21,17 +19,7 @@ public class ProductQuantityConsumer {
     @RetryableTopic(attempts = "1", kafkaTemplate = "kafkaTemplate", dltStrategy = DltStrategy.FAIL_ON_ERROR)
     @KafkaListener(topics = "quantity-decrease-topic", groupId = "product-service")
     public void handleStockEvent(StockDecreaseEvent event) {
-        event.getItems().forEach(item -> {
-            ProductResponse product = productService.getProductById(item.getProductId());
-            int updatedStock = product.getStockQuantity() - item.getQuantity();
-            if (updatedStock < 0){
-                throw new IllegalStateException("Yetersiz stock");
-            }
-            ProductRequest request = new ProductRequest();
-            request.setStockQuantity(updatedStock);
-            productService.updateProduct(item.getProductId(), request);
-        });
-        log.info("Tüm stoklar güncellendi - orderId={}", event.getOrderId());
+        productService.decreaseStockForItems(event.getItems(), event.getOrderId());
     }
 
     @DltHandler

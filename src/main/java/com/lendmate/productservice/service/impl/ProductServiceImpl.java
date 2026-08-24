@@ -5,8 +5,10 @@ import com.lendmate.productservice.dto.requestDto.ProductFilterRequest;
 import com.lendmate.productservice.dto.requestDto.ProductRequest;
 import com.lendmate.productservice.dto.requestDto.ProductSearchFilterRequest;
 import com.lendmate.productservice.dto.responseDto.ProductResponse;
+import com.lendmate.productservice.event.StockDecreaseItem;
 import com.lendmate.productservice.expection.ProductAlreadyExistsException;
 import com.lendmate.productservice.expection.ProductNotFoundException;
+import com.lendmate.productservice.expection.ProductQuantityIsInSufficient;
 import com.lendmate.productservice.mapper.ProductMapper;
 import com.lendmate.productservice.model.Product;
 import com.lendmate.productservice.model.projection.ProductQuantityProjection;
@@ -126,5 +128,20 @@ public class ProductServiceImpl implements ProductService {
         List<ProductQuantityProjection> quantities = productRepository.findByIdIn(ids);
         return quantities.stream()
                 .collect(Collectors.toMap(ProductQuantityProjection::getId, ProductQuantityProjection::getStockQuantity));
+    }
+
+    @Override
+    @Transactional
+    public void decreaseStockForItems(List<StockDecreaseItem> items, Long orderId) {
+        log.info("updating stock  orderId={}, itemCount={}", orderId, items.size());
+        items.forEach(item -> decreaseStock(item.getProductId(), item.getQuantity()));
+        log.info("Updated all orders - orderId={}", orderId);
+    }
+
+    public void decreaseStock(Long productId, int quantity) {
+        int updatedRows = productRepository.decreaseStock(productId, quantity);
+        if (updatedRows == 0) {
+            throw new ProductQuantityIsInSufficient("Insufficient stock productId: " + productId);
+        }
     }
 }

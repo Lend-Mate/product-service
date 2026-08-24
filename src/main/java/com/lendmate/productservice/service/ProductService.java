@@ -4,6 +4,7 @@ import com.lendmate.productservice.dto.requestDto.ProductFilterRequest;
 import com.lendmate.productservice.dto.requestDto.ProductRequest;
 import com.lendmate.productservice.dto.requestDto.ProductSearchFilterRequest;
 import com.lendmate.productservice.dto.responseDto.ProductResponse;
+import com.lendmate.productservice.event.StockDecreaseItem;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -20,4 +21,5 @@ public interface ProductService {
     Page<Long> searchProductsByIds(ProductSearchFilterRequest filter, String query, int page, int size, String sortBy, boolean ascending);
     List<String> getUniqueBrands(ProductFilterRequest filter);
     Map<Long, Integer> getProductQuantities(List<Long> ids);
+    void decreaseStockForItems(List<StockDecreaseItem> items, Long orderId);
 }

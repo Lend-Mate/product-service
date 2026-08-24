@@ -2,6 +2,7 @@ package com.lendmate.productservice.mapper;
 
 import com.lendmate.productservice.dto.requestDto.ProductAvailabilityRequest;
 import com.lendmate.productservice.dto.responseDto.ProductAvailabilityResponse;
+import com.lendmate.productservice.model.Product;
 import com.lendmate.productservice.model.ProductAvailability;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +13,9 @@ public class ProductAvailabilityMapper {
     public ProductAvailability toEntity(ProductAvailabilityRequest request){
         if (request == null) return null;
         return ProductAvailability.builder()
-                .productId(request.getProductId())
+                .product(Product.builder()
+                        .id(request.getProductId())
+                        .build())
                 .startDate(request.getStartDate())
                 .endDate(request.getEndDate())
                 .reason(request.getReason())
@@ -24,7 +27,7 @@ public class ProductAvailabilityMapper {
         if (model == null) return null;
         return ProductAvailabilityResponse.builder()
                 .id(model.getId())
-                .productId(model.getProductId())
+                .productId(model.getProduct().getId())
                 .startDate(model.getStartDate())
                 .endDate(model.getEndDate())
                 .reason(model.getReason())

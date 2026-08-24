@@ -23,9 +23,9 @@ public class ProductSpecification {
             Subquery<Long> subquery = query.subquery(Long.class);
             Root<ProductAvailability> pa = subquery.from(ProductAvailability.class);
 
-            subquery.select(pa.get("productId"))
+            subquery.select(pa.get("product"))
                     .where(
-                            cb.equal(pa.get("productId"), root.get("id")),
+                            cb.equal(pa.get("product").get("id"), root.get("id")),
                             pa.get("reason").in(Reason.BLOCKED, Reason.MAINTENANCE)
                     );
 

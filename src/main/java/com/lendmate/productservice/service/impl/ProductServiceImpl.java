@@ -138,6 +138,11 @@ public class ProductServiceImpl implements ProductService {
         log.info("Updated all orders - orderId={}", orderId);
     }
 
+    @Override
+    public boolean existsProduct(Long productId) {
+        return productRepository.existsByIdAndDeletedFalse(productId);
+    }
+
     public void decreaseStock(Long productId, int quantity) {
         int updatedRows = productRepository.decreaseStock(productId, quantity);
         if (updatedRows == 0) {

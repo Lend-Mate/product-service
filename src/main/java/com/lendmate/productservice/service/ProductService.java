@@ -22,4 +22,5 @@ public interface ProductService {
     List<String> getUniqueBrands(ProductFilterRequest filter);
     Map<Long, Integer> getProductQuantities(List<Long> ids);
     void decreaseStockForItems(List<StockDecreaseItem> items, Long orderId);
+    boolean existsProduct(Long productId);
 }

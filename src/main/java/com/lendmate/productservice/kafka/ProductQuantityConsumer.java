@@ -19,13 +19,11 @@ public class ProductQuantityConsumer {
     @RetryableTopic(attempts = "1", kafkaTemplate = "kafkaTemplate", dltStrategy = DltStrategy.FAIL_ON_ERROR)
     @KafkaListener(topics = "quantity-decrease-topic", groupId = "product-service")
     public void handleStockEvent(StockDecreaseEvent event) {
-        throw new RuntimeException("Stok yetersiz veya işlem başarısız olduğu için event DLT'ye düşecek - orderId=" + event.getOrderId());
-        //productService.decreaseStockForItems(event.getItems(), event.getOrderId());
+        productService.decreaseStockForItems(event.getItems(), event.getOrderId());
     }
 
     @DltHandler
     public void handleDltPayment(StockDecreaseEvent event) {
-        log.info("Stok yetersiz veya işlem başarısız olduğu için event DLT'ye düştü - orderId={}", event.getOrderId());
         log.error("Stok yetersiz veya işlem başarısız olduğu için event DLT'ye düştü - orderId={}", event.getOrderId());
     }
 }

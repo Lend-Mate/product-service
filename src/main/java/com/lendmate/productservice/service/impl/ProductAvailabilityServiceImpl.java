@@ -62,7 +62,7 @@ public class ProductAvailabilityServiceImpl implements ProductAvailabilityServic
         Map<Long, Long> productIdAndCount = expiredRecords.stream()
                 .filter(record -> record.getReason() == Reason.RENTED)
                 .collect(Collectors.groupingBy(
-                        ProductAvailability::getProductId, Collectors.counting()));
+                        pa-> pa.getProduct().getId(), Collectors.counting()));
         for (Map.Entry<Long, Long> entry: productIdAndCount.entrySet()) {
             productRepository.incrementStock(entry.getKey(), entry.getValue().intValue());
         }

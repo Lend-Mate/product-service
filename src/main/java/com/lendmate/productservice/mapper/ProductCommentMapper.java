@@ -2,6 +2,7 @@ package com.lendmate.productservice.mapper;
 
 import com.lendmate.productservice.dto.requestDto.ProductCommentRequest;
 import com.lendmate.productservice.dto.responseDto.ProductCommentResponse;
+import com.lendmate.productservice.model.Product;
 import com.lendmate.productservice.model.ProductComment;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +15,9 @@ public class ProductCommentMapper {
         if (request == null) return null;
 
         return ProductComment.builder()
-                .productId(request.getProductId())
+                .product(Product.builder()
+                        .id(request.getProductId())
+                        .build())
                 .userId(request.getUserId())
                 .text(request.getText())
                 .rating(request.getRating())
@@ -28,7 +31,7 @@ public class ProductCommentMapper {
 
         return ProductCommentResponse.builder()
                 .id(model.getId())
-                .productId(model.getProductId())
+                .productId(model.getProduct().getId())
                 .userId(model.getUserId())
                 .text(model.getText())
                 .rating(model.getRating())

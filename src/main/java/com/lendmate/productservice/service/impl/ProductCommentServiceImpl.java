@@ -3,10 +3,12 @@ package com.lendmate.productservice.service.impl;
 import com.lendmate.productservice.dto.requestDto.ProductCommentRequest;
 import com.lendmate.productservice.dto.responseDto.ProductCommentResponse;
 import com.lendmate.productservice.expection.CommentNotFoundException;
+import com.lendmate.productservice.expection.ProductNotFoundException;
 import com.lendmate.productservice.mapper.ProductCommentMapper;
 import com.lendmate.productservice.model.ProductComment;
 import com.lendmate.productservice.repository.ProductCommentRepository;
 import com.lendmate.productservice.service.ProductCommentService;
+import com.lendmate.productservice.service.ProductService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,7 @@ public class ProductCommentServiceImpl implements ProductCommentService {
 
     private final ProductCommentRepository repository;
     private final ProductCommentMapper mapper;
+    private final ProductService productService;
 
     @Override
     public List<ProductCommentResponse> getComments(Long id) {
@@ -30,6 +33,8 @@ public class ProductCommentServiceImpl implements ProductCommentService {
 
     @Override
     public ProductCommentResponse createProductComment(ProductCommentRequest request) {
+        boolean existProductId = productService.existsProduct(request.getProductId());
+        if (!existProductId) throw new ProductNotFoundException("Product not found, productId: " + request.getProductId());
         ProductComment model = mapper.toEntity(request);
         ProductComment saved = repository.save(model);
         return mapper.toDto(saved);

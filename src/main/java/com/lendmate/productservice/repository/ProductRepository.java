@@ -20,6 +20,8 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
 
     List<ProductQuantityProjection> findByIdIn(List<Long> ids);
 
+    boolean existsByIdAndDeletedFalse(Long productId);
+
     @Modifying(clearAutomatically = true)
     @Query("update Product p set p.stockQuantity = p.stockQuantity - :quantity where p.id = :productId and p.stockQuantity >= :quantity")
     int decreaseStock(@Param("productId") Long productId, @Param("quantity") int quantity);

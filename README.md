@@ -14,6 +14,7 @@ HemenKirala platformunda kiralanabilir ürünlerin, kategorilerin, stok bilgiler
 - [Kurulum](#kurulum)
 - [Ortam Değişkenleri](#ortam-değişkenleri)
 - [Testler](#testler)
+- [Loglama](#loglama)
 
 ---
 
@@ -251,3 +252,19 @@ Testler JUnit 5 ve Spring Boot Test ile yazılmıştır:
 ```bash
 ./mvnw test
 ```
+
+---
+
+## Loglama
+
+Her bir projeden opentelemetry + micrometer kullanarak toplanılan log, trace ve metrikler ilgili gui araçları ile görselleştirilmiştir.
+
+Metrikleri ve logları takip ettiğimiz teknoloji: Grafana
+
+<img width="1470" height="766" alt="Ekran Resmi 2026-08-27 01 12 39" src="https://github.com/user-attachments/assets/7e12497b-068c-4803-aacd-a00becc425f2" />
+
+
+Servisler arası trace id'ler ile takip ettiğimiz giden isteklerin akışını ve zamanını görüntülediğimiz teknoloji: Jaeger
+
+<img width="1470" height="766" alt="Ekran Resmi 2026-08-27 01 15 12" src="https://github.com/user-attachments/assets/788dc7a8-c271-4a64-b5a4-996d41a59dc0" />
+

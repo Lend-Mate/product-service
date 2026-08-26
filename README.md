@@ -257,7 +257,7 @@ Testler JUnit 5 ve Spring Boot Test ile yazılmıştır:
 
 ## Loglama
 
-Her bir projeden opentelemetry + micrometer kullanarak toplanılan log, trace ve metrikler ilgili gui araçları ile görselleştirilmiştir.
+Her bir servisten opentelemetry + micrometer kullanarak toplanılan log, trace ve metrikler ilgili gui araçları ile görselleştirilmiştir.
 
 Metrikleri ve logları takip ettiğimiz teknoloji: Grafana
 

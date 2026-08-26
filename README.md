@@ -1,6 +1,6 @@
 # Product Service
 
-LendMate platformunda kiralanabilir ürünlerin, kategorilerin, stok bilgilerinin, uygunluk dönemlerinin, görsellerinin, yorumlarının ve favorilerinin yönetildiği REST servisidir.
+HemenKirala platformunda kiralanabilir ürünlerin, kategorilerin, stok bilgilerinin, uygunluk dönemlerinin, görsellerinin, yorumlarının ve favorilerinin yönetildiği REST servisidir.
 
 ---
 
